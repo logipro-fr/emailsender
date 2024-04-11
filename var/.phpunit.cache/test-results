@@ -1,0 +1,1 @@
+{"version":1,"defects":{"HelloWorldTest\\HelloWorldTest::testHelloWorld":8,"EmailSenderTest\\EmailSenderTest::testEmailSender":7},"times":{"HelloWorldTest\\HelloWorldTest::testHelloWorld":0.004,"EmailSenderTest\\EmailSenderTest::testEmailSender":0.001}}

@@ -1,0 +1,44 @@
+{
+    "name": "logipro/emailsender",
+    "type": "app",
+    "description": "start a new PHP project with a simple base structure",
+    "keywords": ["php", "DDT"],
+    "homepage": "https://github.com/logipro-fr/emailsender",
+    "license": "Copyrighted",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Mathis Tallaron",
+            "email": "mathis.tallaron@logipro.com",
+            "homepage": "https://fr.linkedin.com/in/mathis-tallaron-mmi",
+            "role": "Internship"
+        }
+    ],
+    "require": {
+        "php": ">=8.3"
+    },
+    "require-dev": {
+        "infection/extension-installer": "0.1.2",
+        "infection/infection": "^0.28",
+        "phpstan/phpdoc-parser": "^1.28",
+        "phpstan/phpstan": "1.10",
+        "phpunit/phpunit": "^11",
+        "squizlabs/php_codesniffer": "3.*",
+        "behat/behat": "^3.14"
+    },
+    "autoload": {
+        "psr-4" : {
+            "EmailSender\\" : "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4" : {
+            "EmailSender\\Tests\\" : "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
+    }
+}
