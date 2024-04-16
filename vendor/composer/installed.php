@@ -3,7 +3,7 @@
         'name' => 'logipro/emailsender',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'cd087d3c6a91b18ecef833f22023ab13ca42fd17',
+        'reference' => 'fd8617fca210173128b7fe966683f5d2016e40f1',
         'type' => 'app',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -139,7 +139,7 @@
         'logipro/emailsender' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'cd087d3c6a91b18ecef833f22023ab13ca42fd17',
+            'reference' => 'fd8617fca210173128b7fe966683f5d2016e40f1',
             'type' => 'app',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -468,6 +468,15 @@
             'install_path' => __DIR__ . '/../squizlabs/php_codesniffer',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'symfony/brevo-mailer' => array(
+            'pretty_version' => 'v7.0.6',
+            'version' => '7.0.6.0',
+            'reference' => '2620c3c9dca5a07eb03eaffb63e9a8e1ca61bf54',
+            'type' => 'symfony-mailer-bridge',
+            'install_path' => __DIR__ . '/../symfony/brevo-mailer',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'symfony/config' => array(
             'pretty_version' => 'v7.0.6',
