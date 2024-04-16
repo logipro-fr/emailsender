@@ -70,3 +70,15 @@
 ### Subject:Test envoi
 ### Message:Ceci est le corps pour un test envoi
 ===========================================================
+
+### Date:15/Apr/2024 08:01:52
+### To:mathis.tallaron@logipro.com
+### Subject:Test envoi
+### Message:Ceci est le corps pour un test envoi
+===========================================================
+
+### Date:15/Apr/2024 08:01:52
+### To:mathis.tallaron@logipro.com
+### Subject:Test envoi
+### Message:Ceci est le corps pour un test envoi
+===========================================================

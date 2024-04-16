@@ -7,8 +7,10 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Webmozart\\Assert\\' => array($vendorDir . '/webmozart/assert/src'),
+    'Symfony\\Polyfill\\Php72\\' => array($vendorDir . '/symfony/polyfill-php72'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Polyfill\\Intl\\Normalizer\\' => array($vendorDir . '/symfony/polyfill-intl-normalizer'),
+    'Symfony\\Polyfill\\Intl\\Idn\\' => array($vendorDir . '/symfony/polyfill-intl-idn'),
     'Symfony\\Polyfill\\Intl\\Grapheme\\' => array($vendorDir . '/symfony/polyfill-intl-grapheme'),
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
     'Symfony\\Contracts\\Translation\\' => array($vendorDir . '/symfony/translation-contracts'),
@@ -19,6 +21,8 @@ return array(
     'Symfony\\Component\\Translation\\' => array($vendorDir . '/symfony/translation'),
     'Symfony\\Component\\String\\' => array($vendorDir . '/symfony/string'),
     'Symfony\\Component\\Process\\' => array($vendorDir . '/symfony/process'),
+    'Symfony\\Component\\Mime\\' => array($vendorDir . '/symfony/mime'),
+    'Symfony\\Component\\Mailer\\' => array($vendorDir . '/symfony/mailer'),
     'Symfony\\Component\\Finder\\' => array($vendorDir . '/symfony/finder'),
     'Symfony\\Component\\Filesystem\\' => array($vendorDir . '/symfony/filesystem'),
     'Symfony\\Component\\EventDispatcher\\' => array($vendorDir . '/symfony/event-dispatcher'),
@@ -41,6 +45,8 @@ return array(
     'Fidry\\CpuCoreCounter\\' => array($vendorDir . '/fidry/cpu-core-counter/src'),
     'EmailSender\\Tests\\' => array($baseDir . '/tests'),
     'EmailSender\\' => array($baseDir . '/src'),
+    'Egulias\\EmailValidator\\' => array($vendorDir . '/egulias/email-validator/src'),
+    'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/src'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
     'Composer\\XdebugHandler\\' => array($vendorDir . '/composer/xdebug-handler/src'),
     'Composer\\Pcre\\' => array($vendorDir . '/composer/pcre/src'),
