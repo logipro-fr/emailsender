@@ -11,6 +11,7 @@ use EmailSender\Application\Service\SendMail\Exceptions\ErrorMailSenderException
 use EmailSender\Application\Service\SendMail\RequestEmailSender;
 use EmailSender\Domain\Attachment;
 use EmailSender\Domain\HtmlContent;
+use EmailSender\Domain\Mail;
 use EmailSender\Domain\Sender;
 use EmailSender\Domain\Subject;
 use EmailSender\Domain\To;
@@ -59,11 +60,11 @@ class EmailSenderTest extends TestCase
         $emailApiSmtpContent = new EmailSender(self::API_KEY, $this->createMockGuzzle(200));
 
         $smtpMailForTesting = new SendSmtpEmail([
-            'subject' => $this->mailDataForTests()->subject->getSubject(),
-            'sender' => $this->mailDataForTests()->sender->getSender(),
-            'to' => $this->mailDataForTests()->to->getTo(),
-            'htmlContent' => $this->mailDataForTests()->htmlContent->getHtmlContent(),
-            'attachment' => $this->mailDataForTests()->attachment->getAttachment(),
+            'subject' => $this->mailDataForTests()->mail->getMailSubject(),
+            'sender' => $this->mailDataForTests()->mail->getMailSender(),
+            'to' => $this->mailDataForTests()->mail->getMailTo(),
+            'htmlContent' => $this->mailDataForTests()->mail->getMailHtmlContent(),
+            'attachment' => $this->mailDataForTests()->mail->getMailAttachment(),
         ]);
 
         $emailApiSmtpContent->isAuthenticated(self::CURRENT_USER);
@@ -84,13 +85,15 @@ class EmailSenderTest extends TestCase
 
     public function mailDataForTests(): RequestEmailSender
     {
-        return new RequestEmailSender(
+        $mail = new Mail(
             new Subject('Test Email'),
             new Sender(['name' => 'Sender Name', 'email' => 'sender@example.com']),
             new To([['name' => 'Recipient Name', 'email' => 'recipient@example.com']]),
             new HtmlContent('<html><body><h1>This is a test email</h1></body></html>'),
             new Attachment([])
         );
+
+        return new RequestEmailSender($mail);
     }
 }
 

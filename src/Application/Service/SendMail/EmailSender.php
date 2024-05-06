@@ -36,10 +36,10 @@ class EmailSender
         return new ResponseIsAuth($this->user);
     }
 
-    public function sendMail(RequestEmailSender $maildata): CreateSmtpEmail
+    public function sendMail(RequestEmailSender $request): CreateSmtpEmail
     {
         if (isset($this->user)) {
-            $sendSmtpEmail = $this->contentSmtpEmail($maildata);
+            $sendSmtpEmail = $this->contentSmtpEmail($request);
 
             try {
                 return $this->apiInstance->sendTransacEmail($sendSmtpEmail);
@@ -51,14 +51,14 @@ class EmailSender
         throw new ErrorAuthException(self::ERROR_AUTH, self::HTTP_ERROR_401);
     }
 
-    public function contentSmtpEmail(RequestEmailSender $maildata): SendSmtpEmail
+    public function contentSmtpEmail(RequestEmailSender $request): SendSmtpEmail
     {
         return new SendSmtpEmail([
-            'subject' => $maildata->subject->getSubject(),
-            'sender' => $maildata->sender->getSender(),
-            'to' => $maildata->to->getTo(),
-            'htmlContent' => $maildata->htmlContent->getHtmlContent(),
-            'attachment' => $maildata->attachment->getAttachment(),
+            'subject' => $request->mail->getMailSubject(),
+            'sender' => $request->mail->getMailSender(),
+            'to' => $request->mail->getMailTo(),
+            'htmlContent' => $request->mail->getMailHtmlContent(),
+            'attachment' => $request->mail->getMailAttachment(),
         ]);
     }
 }
