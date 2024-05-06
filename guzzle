@@ -1,0 +1,237 @@
+object(GuzzleHttp\Handler\MockHandler)#490 (5) {
+  ["queue":"GuzzleHttp\Handler\MockHandler":private]=>
+  array(0) {
+  }
+  ["lastRequest":"GuzzleHttp\Handler\MockHandler":private]=>
+  object(GuzzleHttp\Psr7\Request)#467 (7) {
+    ["method":"GuzzleHttp\Psr7\Request":private]=>
+    string(4) "POST"
+    ["requestTarget":"GuzzleHttp\Psr7\Request":private]=>
+    NULL
+    ["uri":"GuzzleHttp\Psr7\Request":private]=>
+    object(GuzzleHttp\Psr7\Uri)#474 (8) {
+      ["scheme":"GuzzleHttp\Psr7\Uri":private]=>
+      string(5) "https"
+      ["userInfo":"GuzzleHttp\Psr7\Uri":private]=>
+      string(0) ""
+      ["host":"GuzzleHttp\Psr7\Uri":private]=>
+      string(13) "api.brevo.com"
+      ["port":"GuzzleHttp\Psr7\Uri":private]=>
+      NULL
+      ["path":"GuzzleHttp\Psr7\Uri":private]=>
+      string(14) "/v3/smtp/email"
+      ["query":"GuzzleHttp\Psr7\Uri":private]=>
+      string(0) ""
+      ["fragment":"GuzzleHttp\Psr7\Uri":private]=>
+      string(0) ""
+      ["composedComponents":"GuzzleHttp\Psr7\Uri":private]=>
+      NULL
+    }
+    ["headers":"GuzzleHttp\Psr7\Request":private]=>
+    array(6) {
+      ["Content-Length"]=>
+      array(1) {
+        [0]=>
+        string(3) "326"
+      }
+      ["Host"]=>
+      array(1) {
+        [0]=>
+        string(13) "api.brevo.com"
+      }
+      ["User-Agent"]=>
+      array(1) {
+        [0]=>
+        string(26) "brevo_clientAPI/v2.0.0/php"
+      }
+      ["Accept"]=>
+      array(1) {
+        [0]=>
+        string(16) "application/json"
+      }
+      ["Content-Type"]=>
+      array(1) {
+        [0]=>
+        string(16) "application/json"
+      }
+      ["api-key"]=>
+      array(1) {
+        [0]=>
+        string(12) "fake-api-key"
+      }
+    }
+    ["headerNames":"GuzzleHttp\Psr7\Request":private]=>
+    array(6) {
+      ["content-length"]=>
+      string(14) "Content-Length"
+      ["host"]=>
+      string(4) "Host"
+      ["user-agent"]=>
+      string(10) "User-Agent"
+      ["accept"]=>
+      string(6) "Accept"
+      ["content-type"]=>
+      string(12) "Content-Type"
+      ["api-key"]=>
+      string(7) "api-key"
+    }
+    ["protocol":"GuzzleHttp\Psr7\Request":private]=>
+    string(3) "1.1"
+    ["stream":"GuzzleHttp\Psr7\Request":private]=>
+    object(GuzzleHttp\Psr7\Stream)#473 (7) {
+      ["stream":"GuzzleHttp\Psr7\Stream":private]=>
+      resource(530) of type (stream)
+      ["size":"GuzzleHttp\Psr7\Stream":private]=>
+      int(326)
+      ["seekable":"GuzzleHttp\Psr7\Stream":private]=>
+      bool(true)
+      ["readable":"GuzzleHttp\Psr7\Stream":private]=>
+      bool(true)
+      ["writable":"GuzzleHttp\Psr7\Stream":private]=>
+      bool(true)
+      ["uri":"GuzzleHttp\Psr7\Stream":private]=>
+      string(10) "php://temp"
+      ["customMetadata":"GuzzleHttp\Psr7\Stream":private]=>
+      array(0) {
+      }
+    }
+  }
+  ["lastOptions":"GuzzleHttp\Handler\MockHandler":private]=>
+  array(8) {
+    ["synchronous"]=>
+    bool(true)
+    ["handler"]=>
+    object(GuzzleHttp\HandlerStack)#32 (3) {
+      ["handler":"GuzzleHttp\HandlerStack":private]=>
+      *RECURSION*
+      ["stack":"GuzzleHttp\HandlerStack":private]=>
+      array(4) {
+        [0]=>
+        array(2) {
+          [0]=>
+          object(Closure)#29 (2) {
+            ["static"]=>
+            array(1) {
+              ["bodySummarizer"]=>
+              NULL
+            }
+            ["parameter"]=>
+            array(1) {
+              ["$handler"]=>
+              string(10) "<required>"
+            }
+          }
+          [1]=>
+          string(11) "http_errors"
+        }
+        [1]=>
+        array(2) {
+          [0]=>
+          object(Closure)#230 (1) {
+            ["parameter"]=>
+            array(1) {
+              ["$handler"]=>
+              string(10) "<required>"
+            }
+          }
+          [1]=>
+          string(15) "allow_redirects"
+        }
+        [2]=>
+        array(2) {
+          [0]=>
+          object(Closure)#489 (1) {
+            ["parameter"]=>
+            array(1) {
+              ["$handler"]=>
+              string(10) "<required>"
+            }
+          }
+          [1]=>
+          string(7) "cookies"
+        }
+        [3]=>
+        array(2) {
+          [0]=>
+          object(Closure)#485 (1) {
+            ["parameter"]=>
+            array(1) {
+              ["$handler"]=>
+              string(10) "<required>"
+            }
+          }
+          [1]=>
+          string(12) "prepare_body"
+        }
+      }
+      ["cached":"GuzzleHttp\HandlerStack":private]=>
+      object(Closure)#468 (2) {
+        ["static"]=>
+        array(2) {
+          ["handler"]=>
+          object(GuzzleHttp\RedirectMiddleware)#469 (1) {
+            ["nextHandler":"GuzzleHttp\RedirectMiddleware":private]=>
+            object(Closure)#470 (2) {
+              ["static"]=>
+              array(1) {
+                ["handler"]=>
+                object(GuzzleHttp\PrepareBodyMiddleware)#471 (1) {
+                  ["nextHandler":"GuzzleHttp\PrepareBodyMiddleware":private]=>
+                  *RECURSION*
+                }
+              }
+              ["parameter"]=>
+              array(2) {
+                ["$request"]=>
+                string(10) "<required>"
+                ["$options"]=>
+                string(10) "<required>"
+              }
+            }
+          }
+          ["bodySummarizer"]=>
+          NULL
+        }
+        ["parameter"]=>
+        array(2) {
+          ["$request"]=>
+          string(10) "<required>"
+          ["$options"]=>
+          string(10) "<required>"
+        }
+      }
+    }
+    ["allow_redirects"]=>
+    array(5) {
+      ["max"]=>
+      int(5)
+      ["protocols"]=>
+      array(2) {
+        [0]=>
+        string(4) "http"
+        [1]=>
+        string(5) "https"
+      }
+      ["strict"]=>
+      bool(false)
+      ["referer"]=>
+      bool(false)
+      ["track_redirects"]=>
+      bool(false)
+    }
+    ["http_errors"]=>
+    bool(true)
+    ["decode_content"]=>
+    bool(true)
+    ["verify"]=>
+    bool(true)
+    ["cookies"]=>
+    bool(false)
+    ["idn_conversion"]=>
+    bool(false)
+  }
+  ["onFulfilled":"GuzzleHttp\Handler\MockHandler":private]=>
+  NULL
+  ["onRejected":"GuzzleHttp\Handler\MockHandler":private]=>
+  NULL
+}

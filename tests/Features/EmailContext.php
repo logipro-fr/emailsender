@@ -12,11 +12,11 @@ use Behat\Gherkin\Node\TableNode;
  */
 class EmailContext implements Context
 {
-    private string $authenticatedUser;
-    private string $sendingApi;
-    private string $mailWithDetails;
-    private bool $mailSent;
-    private string $mailConfirmation;
+    public string $authenticatedUser;
+    public string $sendingApi;
+    public string $mailWithDetails;
+    public bool $mailSent;
+    public string $mailConfirmation;
 
     /**
      * Initializes context.
@@ -48,7 +48,7 @@ class EmailContext implements Context
     /**
      * @When I send an email with the following details:
      */
-    public function iSendAnEmailWithTheFollowingDetails(TableNode $table)
+    public function iSendAnEmailWithTheFollowingDetails(TableNode $table): void
     {
         $this->mailWithDetails = '| example@domain.com | Send Test | This is a send test |';
     }
@@ -56,7 +56,7 @@ class EmailContext implements Context
     /**
      * @Then the email is successfully sent
      */
-    public function theEmailIsSuccessfullySent()
+    public function theEmailIsSuccessfullySent(): void
     {
         $this->mailSent = true;
     }
@@ -64,7 +64,7 @@ class EmailContext implements Context
     /**
      * @Then I receive a confirmation of the sending
      */
-    public function iReceiveAConfirmationOfTheSending()
+    public function iReceiveAConfirmationOfTheSending(): void
     {
         $this->mailConfirmation = 'Votre mail a été envoyé avec succès';
     }
