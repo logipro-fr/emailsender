@@ -55,8 +55,8 @@ class EmailSender
     {
         return new SendSmtpEmail([
             'subject' => $request->mail->getMailSubject(),
-            'sender' => $request->mail->getMailSender(),
-            'to' => $request->mail->getMailTo(),
+            'sender' => $request->mail->getMailSenderData(),
+            'to' => $request->mail->getMailRecipientData(),
             'htmlContent' => $request->mail->getMailHtmlContent(),
             'attachment' => $request->mail->getMailAttachment(),
         ]);

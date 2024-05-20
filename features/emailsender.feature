@@ -4,10 +4,9 @@ Feature: Send an email
     In order to communicate with my recipients
 
     Scenario: Sending a simple email
-        Given I am an authenticated user
-        And I have access to the email sending API
+        Given I want send a mail via an email provider
         When I send an email with the following details:
-        | recipient | subject | body |
-        | example@domain.com | Send Test | This is a send test |
+        | recipient          | subject   | body                 |
+        | example@domain.com | Send Test | This is a send test  |
         Then the email is successfully sent
-        And I receive a confirmation of the sending
+        And the email is marked as sent with its sent date

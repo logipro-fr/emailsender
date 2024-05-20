@@ -2,22 +2,28 @@
 
 namespace EmailSender\Domain;
 
-use PhpParser\Node\Expr\Cast\Object_;
-
 class Sender
 {
     /**
-     * @param array<string, string> $sender
+     * @param Contact $sender
      */
-    public function __construct(private array $sender)
+    public function __construct(private Contact $sender)
     {
     }
 
     /**
-     * @return array<string, string> $sender
+     * @return string $sender
      */
-    public function getSender(): array
+    public function getSenderName(): string
     {
-        return $this->sender;
+        return $this->sender->getName();
+    }
+
+    /**
+     * @return string $sender
+     */
+    public function getSenderAddress(): string
+    {
+        return $this->sender->getAddress();
     }
 }

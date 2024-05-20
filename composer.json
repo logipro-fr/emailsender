@@ -37,7 +37,8 @@
     },
     "autoload-dev": {
         "psr-4" : {
-            "EmailSender\\Tests\\" : "tests/"
+            "EmailSender\\Tests\\" : "tests/unit",
+            "EmailSender\\Integration\\" : "tests/integration",
         }
     },
     "config": {

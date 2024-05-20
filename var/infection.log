@@ -1,6 +1,127 @@
 Escaped mutants:
 ================
 
+1) /home/dev/work/emailsender/src/Domain/Contact.php:16    [M] Throw_
+
+--- Original
++++ New
+@@ @@
+     public function __construct(string $name, string $address)
+     {
+         if (!$this->isValidEmailAddress($address)) {
+-            throw new MalformedAddressException("Invalid email address: {$address}");
++            new MalformedAddressException("Invalid email address: {$address}");
+         }
+         $this->name = $name;
+         $this->address = $address;
+
+
+2) /home/dev/work/emailsender/src/Domain/Contact.php:33    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     {
+         return $this->address;
+     }
+-    public function isValidEmailAddress(string $address): mixed
++    protected function isValidEmailAddress(string $address): mixed
+     {
+         return filter_var($address, FILTER_VALIDATE_EMAIL);
+     }
+ }
+
+
+3) /home/dev/work/emailsender/src/Domain/Mail.php:36    [M] ArrayItem
+
+--- Original
++++ New
+@@ @@
+      */
+     public function getMailSenderData(): array
+     {
+-        return ['name' => $this->getMailSenderName(), 'email' => $this->getMailSenderAddress()];
++        return ['name' > $this->getMailSenderName(), 'email' => $this->getMailSenderAddress()];
+     }
+     public function getMailRecipientName(): string
+     {
+
+
+4) /home/dev/work/emailsender/src/Domain/Mail.php:36    [M] ArrayItem
+
+--- Original
++++ New
+@@ @@
+      */
+     public function getMailSenderData(): array
+     {
+-        return ['name' => $this->getMailSenderName(), 'email' => $this->getMailSenderAddress()];
++        return ['name' => $this->getMailSenderName(), 'email' > $this->getMailSenderAddress()];
+     }
+     public function getMailRecipientName(): string
+     {
+
+
+5) /home/dev/work/emailsender/src/Domain/Mail.php:36    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+      */
+     public function getMailSenderData(): array
+     {
+-        return ['name' => $this->getMailSenderName(), 'email' => $this->getMailSenderAddress()];
++        return ['email' => $this->getMailSenderAddress()];
+     }
+     public function getMailRecipientName(): string
+     {
+
+
+6) /home/dev/work/emailsender/src/Domain/Mail.php:54    [M] ArrayItem
+
+--- Original
++++ New
+@@ @@
+      */
+     public function getMailRecipientData(): array
+     {
+-        return ['name' => $this->getMailRecipientName(), 'email' => $this->getMailRecipientAddress()];
++        return ['name' > $this->getMailRecipientName(), 'email' => $this->getMailRecipientAddress()];
+     }
+     public function getMailHtmlContent(): string
+     {
+
+
+7) /home/dev/work/emailsender/src/Domain/Mail.php:54    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+      */
+     public function getMailRecipientData(): array
+     {
+-        return ['name' => $this->getMailRecipientName(), 'email' => $this->getMailRecipientAddress()];
++        return ['email' => $this->getMailRecipientAddress()];
+     }
+     public function getMailHtmlContent(): string
+     {
+
+
+8) /home/dev/work/emailsender/src/Domain/Mail.php:54    [M] ArrayItem
+
+--- Original
++++ New
+@@ @@
+      */
+     public function getMailRecipientData(): array
+     {
+-        return ['name' => $this->getMailRecipientName(), 'email' => $this->getMailRecipientAddress()];
++        return ['name' => $this->getMailRecipientName(), 'email' > $this->getMailRecipientAddress()];
+     }
+     public function getMailHtmlContent(): string
+     {
+
+
 Timed Out mutants:
 ==================
 

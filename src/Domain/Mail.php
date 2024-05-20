@@ -7,7 +7,7 @@ class Mail
     public function __construct(
         private Subject $subject,
         private Sender $sender,
-        private To $to,
+        private Recipient $recipient,
         private HtmlContent $htmlContent,
         private Attachment $attachment
     ) {
@@ -18,20 +18,40 @@ class Mail
         return $this->subject->getSubject();
     }
 
-    /**
-     * @return array<string, string> $sender
-     */
-    public function getMailSender(): array
+    public function getMailSenderName(): string
     {
-        return $this->sender->getSender();
+        return $this->sender->getSenderName();
+    }
+
+    public function getMailSenderAddress(): string
+    {
+        return $this->sender->getSenderAddress();
     }
 
     /**
-     * @return array<int, array<string, string>> $to
+     * @return array<string, string>
      */
-    public function getMailTo(): array
+    public function getMailSenderData(): array
     {
-        return $this->to->getTo();
+        return ['name' => $this->getMailSenderName(), 'email' => $this->getMailSenderAddress()];
+    }
+
+    public function getMailRecipientName(): string
+    {
+        return $this->recipient->getRecipientName(0);
+    }
+
+    public function getMailRecipientAddress(): string
+    {
+        return $this->recipient->getRecipientAddress(0);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getMailRecipientData(): array
+    {
+        return ['name' => $this->getMailRecipientName(), 'email' => $this->getMailRecipientAddress()];
     }
 
     public function getMailHtmlContent(): string

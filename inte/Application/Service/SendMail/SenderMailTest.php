@@ -4,8 +4,14 @@ namespace EmailSender\Tests;
 
 use Brevo\Client\Model\SendSmtpEmailAttachment;
 use PHPUnit\Framework\TestCase;
-use EmailSender\EmailSender;
-use EmailSender\RequestEmailSender;
+use EmailSender\Application\Service\SendMail\EmailSender;
+use EmailSender\Application\Service\SendMail\RequestEmailSender;
+use EmailSender\Domain\Attachment;
+use EmailSender\Domain\HtmlContent;
+use EmailSender\Domain\Mail;
+use EmailSender\Domain\Recipient;
+use EmailSender\Domain\Sender;
+use EmailSender\Domain\Subject;
 
 class SenderMailTest extends TestCase
 {
@@ -15,22 +21,26 @@ class SenderMailTest extends TestCase
 
         $emailSender = new EmailSender($apiKey);
 
-        $subject = 'Kakoo kakoo';
-        $sender = ['name' => 'Mathis', 'email' => 'sender@example.com'];
-        $recipients = [['name' => 'Recipient Name', 'email' => 'romain.malosse@logipro.com']];
-        $htmlContent = "<html><head></head><body><a href='https://www.amazon.fr/'>Coucou lien</a></body></html>";
 
         $filePath = __DIR__.'/revue.pdf';
         $fileContent = file_get_contents($filePath);
         $fileBase64 = base64_encode($fileContent);
-
         $attachment = new SendSmtpEmailAttachment([
             'content' => $fileBase64,
             'name' => 'revue.pdf',
         ]);
 
+        $mail = new Mail(
+            new Subject('Test Email'),
+            new Sender(['name' => 'Ton admirateur secret', 'email' => 'sender@example.com']),
+            new Recipient([['name' => 'Recipient Name', 'email' => 'morgan.chemarin@logipro.com']]),
+            new HtmlContent('<html><body><h1>This is a test email</h1></body></html>'),
+            new Attachment([$attachment])
+        );
+
+
         $emailSender->isAuthenticated("Mathis");
-        $result = $emailSender->sendMail(new RequestEmailSender($subject, $sender, $recipients, $htmlContent, [$attachment]));
+        $result = $emailSender->sendMail(new RequestEmailSender($mail));
 
         if (method_exists($result, 'getMessageId')) {
             $messageId = $result->getMessageId();

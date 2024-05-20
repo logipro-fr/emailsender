@@ -10,11 +10,12 @@ use EmailSender\Application\Service\SendMail\Exceptions\ErrorAuthException;
 use EmailSender\Application\Service\SendMail\Exceptions\ErrorMailSenderException;
 use EmailSender\Application\Service\SendMail\RequestEmailSender;
 use EmailSender\Domain\Attachment;
+use EmailSender\Domain\Contact;
 use EmailSender\Domain\HtmlContent;
 use EmailSender\Domain\Mail;
+use EmailSender\Domain\Recipient;
 use EmailSender\Domain\Sender;
 use EmailSender\Domain\Subject;
-use EmailSender\Domain\To;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -27,10 +28,10 @@ class EmailSenderTest extends TestCase
 
     public function testSendTransactionalEmailSuccess(): void
     {
-        $emailApiSuccess = new EmailSender(self::API_KEY, $this->createMockGuzzle(200));
+        $instanceEmailSender = new EmailSender(self::API_KEY, $this->createMockGuzzle(200));
         $mailData = $this->mailDataForTests();
-        $emailApiSuccess->isAuthenticated(self::CURRENT_USER);
-        $response = $emailApiSuccess->sendMail($mailData);
+        $instanceEmailSender->isAuthenticated(self::CURRENT_USER);
+        $response = $instanceEmailSender->sendMail($mailData);
         $this->assertInstanceOf(CreateSmtpEmail::class, $response);
         $this->assertEquals('1234', $response->getMessageId());
     }
@@ -38,40 +39,39 @@ class EmailSenderTest extends TestCase
 
     public function testSendTransactionalEmailAuthFailure(): void
     {
-        $emailApiFailure = new EmailSender(self::API_KEY, $this->createMockGuzzle(401));
+        $instanceEmailSender = new EmailSender(self::API_KEY, $this->createMockGuzzle(401));
         $mailData = $this->mailDataForTests();
         $this->expectException(ErrorAuthException::class);
-        $emailApiFailure->sendMail($mailData);
+        $instanceEmailSender->sendMail($mailData);
     }
 
 
     public function testSendTransactionalEmailSendingFailure(): void
     {
-        $emailApiFailure = new EmailSender(self::API_KEY, $this->createMockGuzzle(500));
+        $instanceEmailSender = new EmailSender(self::API_KEY, $this->createMockGuzzle(500));
         $mailData = $this->mailDataForTests();
         $this->expectException(ErrorMailSenderException::class);
-        $emailApiFailure->isAuthenticated(self::CURRENT_USER);
-        $emailApiFailure->sendMail($mailData);
+        $instanceEmailSender->isAuthenticated(self::CURRENT_USER);
+        $instanceEmailSender->sendMail($mailData);
     }
 
 
     public function testContentSmtpMail(): void
     {
-        $emailApiSmtpContent = new EmailSender(self::API_KEY, $this->createMockGuzzle(200));
+        $instanceEmailSender = new EmailSender(self::API_KEY, $this->createMockGuzzle(200));
 
         $smtpMailForTesting = new SendSmtpEmail([
             'subject' => $this->mailDataForTests()->mail->getMailSubject(),
-            'sender' => $this->mailDataForTests()->mail->getMailSender(),
-            'to' => $this->mailDataForTests()->mail->getMailTo(),
+            'sender' => $this->mailDataForTests()->mail->getMailSenderData(),
+            'to' => $this->mailDataForTests()->mail->getMailRecipientData(),
             'htmlContent' => $this->mailDataForTests()->mail->getMailHtmlContent(),
             'attachment' => $this->mailDataForTests()->mail->getMailAttachment(),
         ]);
 
-        $emailApiSmtpContent->isAuthenticated(self::CURRENT_USER);
-        $smtpContent = $emailApiSmtpContent->contentSmtpEmail($this->mailDataForTests());
+        $instanceEmailSender->isAuthenticated(self::CURRENT_USER);
+        $smtpContent = $instanceEmailSender->contentSmtpEmail($this->mailDataForTests());
         $this->assertEquals($smtpContent, $smtpMailForTesting);
     }
-
 
     private function createMockGuzzle(int $statusCode): Client
     {
@@ -87,8 +87,8 @@ class EmailSenderTest extends TestCase
     {
         $mail = new Mail(
             new Subject('Test Email'),
-            new Sender(['name' => 'Sender Name', 'email' => 'sender@example.com']),
-            new To([['name' => 'Recipient Name', 'email' => 'recipient@example.com']]),
+            new Sender(new Contact("Sender Name", "sender@example.com")),
+            new Recipient([new Contact("Recipient Name", "recipient@example.com")]),
             new HtmlContent('<html><body><h1>This is a test email</h1></body></html>'),
             new Attachment([])
         );
@@ -96,12 +96,3 @@ class EmailSenderTest extends TestCase
         return new RequestEmailSender($mail);
     }
 }
-
-
-    /*public function testIsAuthenticated(): void
-    {
-        $emailSenderMock = new EmailSender("ApiKeyFake");
-        $result = $emailSenderMock->isAuthenticated("Mathis");
-
-        $this->assertEquals("Mathis", $result->user);
-    }*/
