@@ -15,11 +15,4 @@ class RecipientTest extends TestCase
         $this->assertEquals("Morgan Chemarin", $contact->getRecipientName(0));
         $this->assertEquals("morgan.chemarin@logipro.fr", $contact->getRecipientAddress(0));
     }
-
-    /*public function testMalformedAddressException(): void
-    {
-        $malformedEmail = "adhockarobasemoulisartpointfr";
-        $this->expectException(MalformedAddressException::class);
-        $instanceRecipient = new Recipient([array("Archibald Haddock", $malformedEmail)]);
-    }*/
 }

@@ -22,12 +22,12 @@ class MailTest extends TestCase
             new HtmlContent('<html><body><h1>This is a test email</h1></body></html>'),
             new Attachment([])
         );
-        $this->assertEquals('Test Email', $mail->getMailSubject());
-        $this->assertEquals("Sender Name", $mail->getMailSenderName());
-        $this->assertEquals("sender@example.com", $mail->getMailSenderAddress());
-        $this->assertEquals("Recipient Name", $mail->getMailRecipientName());
-        $this->assertEquals("recipient@example.com", $mail->getMailRecipientAddress());
-        $this->assertEquals('<html><body><h1>This is a test email</h1></body></html>', $mail->getMailHtmlContent());
-        $this->assertEquals([], $mail->getMailAttachment());
+        $this->assertEquals('Test Email', $mail->getSubject());
+        $this->assertEquals("Sender Name", $mail->getSenderName());
+        $this->assertEquals("sender@example.com", $mail->getSenderAddress());
+        $this->assertEquals("Recipient Name", $mail->getRecipientName());
+        $this->assertEquals("recipient@example.com", $mail->getRecipientAddress());
+        $this->assertEquals('<html><body><h1>This is a test email</h1></body></html>', $mail->getHtmlContent());
+        $this->assertEquals([], $mail->getAttachment());
     }
 }

@@ -61,11 +61,11 @@ class EmailSenderTest extends TestCase
         $instanceEmailSender = new EmailSender(self::API_KEY, $this->createMockGuzzle(200));
 
         $smtpMailForTesting = new SendSmtpEmail([
-            'subject' => $this->mailDataForTests()->mail->getMailSubject(),
-            'sender' => $this->mailDataForTests()->mail->getMailSenderData(),
-            'to' => $this->mailDataForTests()->mail->getMailRecipientData(),
-            'htmlContent' => $this->mailDataForTests()->mail->getMailHtmlContent(),
-            'attachment' => $this->mailDataForTests()->mail->getMailAttachment(),
+            'subject' => $this->mailDataForTests()->mail->getSubject(),
+            'sender' => $this->mailDataForTests()->mail->getSenderData(),
+            'to' => $this->mailDataForTests()->mail->getRecipientData(),
+            'htmlContent' => $this->mailDataForTests()->mail->getHtmlContent(),
+            'attachment' => $this->mailDataForTests()->mail->getAttachment(),
         ]);
 
         $instanceEmailSender->isAuthenticated(self::CURRENT_USER);

@@ -54,11 +54,11 @@ class EmailSender
     public function contentSmtpEmail(RequestEmailSender $request): SendSmtpEmail
     {
         return new SendSmtpEmail([
-            'subject' => $request->mail->getMailSubject(),
-            'sender' => $request->mail->getMailSenderData(),
-            'to' => $request->mail->getMailRecipientData(),
-            'htmlContent' => $request->mail->getMailHtmlContent(),
-            'attachment' => $request->mail->getMailAttachment(),
+            'subject' => $request->mail->getSubject(),
+            'sender' => $request->mail->getSenderData(),
+            'to' => $request->mail->getRecipientData(),
+            'htmlContent' => $request->mail->getHtmlContent(),
+            'attachment' => $request->mail->getAttachment(),
         ]);
     }
 }
