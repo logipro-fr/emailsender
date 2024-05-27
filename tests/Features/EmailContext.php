@@ -15,6 +15,7 @@ use EmailSender\Domain\Mail;
 use EmailSender\Domain\Recipient;
 use EmailSender\Domain\Sender;
 use EmailSender\Domain\Subject;
+use EmailSender\Infrastructure\Brevo\BrevoSender;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -38,7 +39,8 @@ class EmailContext implements Context
      */
     public function __construct()
     {
-        $this->emailSender = new EmailSender(self::API_KEY, $this->createMockGuzzle(200));
+        $brevoApi = new BrevoSender(self::API_KEY, $this->createMockGuzzle(200));
+        $this->emailSender = new EmailSender($brevoApi);
     }
 
     /**

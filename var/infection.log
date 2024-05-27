@@ -16,34 +16,33 @@ Escaped mutants:
          $this->address = $address;
 
 
-2) /home/dev/work/emailsender/src/Domain/Contact.php:33    [M] PublicVisibility
-
---- Original
-+++ New
-@@ @@
-     {
-         return $this->address;
-     }
--    public function isValidEmailAddress(string $address): mixed
-+    protected function isValidEmailAddress(string $address): mixed
-     {
-         return filter_var($address, FILTER_VALIDATE_EMAIL);
-     }
- }
-
-
-3) /home/dev/work/emailsender/src/Domain/Mail.php:36    [M] ArrayItem
+2) /home/dev/work/emailsender/src/Domain/Mail.php:36    [M] ArrayItem
 
 --- Original
 +++ New
 @@ @@
       */
-     public function getMailSenderData(): array
+     public function getSenderData(): array
      {
--        return ['name' => $this->getMailSenderName(), 'email' => $this->getMailSenderAddress()];
-+        return ['name' > $this->getMailSenderName(), 'email' => $this->getMailSenderAddress()];
+-        return ['name' => $this->getSenderName(), 'email' => $this->getSenderAddress()];
++        return ['name' => $this->getSenderName(), 'email' > $this->getSenderAddress()];
      }
-     public function getMailRecipientName(): string
+     public function getRecipientName(): string
+     {
+
+
+3) /home/dev/work/emailsender/src/Domain/Mail.php:36    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+      */
+     public function getSenderData(): array
+     {
+-        return ['name' => $this->getSenderName(), 'email' => $this->getSenderAddress()];
++        return ['email' => $this->getSenderAddress()];
+     }
+     public function getRecipientName(): string
      {
 
 
@@ -53,27 +52,27 @@ Escaped mutants:
 +++ New
 @@ @@
       */
-     public function getMailSenderData(): array
+     public function getSenderData(): array
      {
--        return ['name' => $this->getMailSenderName(), 'email' => $this->getMailSenderAddress()];
-+        return ['name' => $this->getMailSenderName(), 'email' > $this->getMailSenderAddress()];
+-        return ['name' => $this->getSenderName(), 'email' => $this->getSenderAddress()];
++        return ['name' > $this->getSenderName(), 'email' => $this->getSenderAddress()];
      }
-     public function getMailRecipientName(): string
+     public function getRecipientName(): string
      {
 
 
-5) /home/dev/work/emailsender/src/Domain/Mail.php:36    [M] ArrayItemRemoval
+5) /home/dev/work/emailsender/src/Domain/Mail.php:54    [M] ArrayItem
 
 --- Original
 +++ New
 @@ @@
       */
-     public function getMailSenderData(): array
+     public function getRecipientData(): array
      {
--        return ['name' => $this->getMailSenderName(), 'email' => $this->getMailSenderAddress()];
-+        return ['email' => $this->getMailSenderAddress()];
+-        return ['name' => $this->getRecipientName(), 'email' => $this->getRecipientAddress()];
++        return ['name' > $this->getRecipientName(), 'email' => $this->getRecipientAddress()];
      }
-     public function getMailRecipientName(): string
+     public function getHtmlContent(): string
      {
 
 
@@ -83,12 +82,12 @@ Escaped mutants:
 +++ New
 @@ @@
       */
-     public function getMailRecipientData(): array
+     public function getRecipientData(): array
      {
--        return ['name' => $this->getMailRecipientName(), 'email' => $this->getMailRecipientAddress()];
-+        return ['name' > $this->getMailRecipientName(), 'email' => $this->getMailRecipientAddress()];
+-        return ['name' => $this->getRecipientName(), 'email' => $this->getRecipientAddress()];
++        return ['name' => $this->getRecipientName(), 'email' > $this->getRecipientAddress()];
      }
-     public function getMailHtmlContent(): string
+     public function getHtmlContent(): string
      {
 
 
@@ -98,28 +97,58 @@ Escaped mutants:
 +++ New
 @@ @@
       */
-     public function getMailRecipientData(): array
+     public function getRecipientData(): array
      {
--        return ['name' => $this->getMailRecipientName(), 'email' => $this->getMailRecipientAddress()];
-+        return ['email' => $this->getMailRecipientAddress()];
+-        return ['name' => $this->getRecipientName(), 'email' => $this->getRecipientAddress()];
++        return ['email' => $this->getRecipientAddress()];
      }
-     public function getMailHtmlContent(): string
+     public function getHtmlContent(): string
      {
 
 
-8) /home/dev/work/emailsender/src/Domain/Mail.php:54    [M] ArrayItem
+8) /home/dev/work/emailsender/src/Infrastructure/Brevo/BrevoSender.php:29    [M] FunctionCallRemoval
 
 --- Original
 +++ New
 @@ @@
-      */
-     public function getMailRecipientData(): array
-     {
--        return ['name' => $this->getMailRecipientName(), 'email' => $this->getMailRecipientAddress()];
-+        return ['name' => $this->getMailRecipientName(), 'email' > $this->getMailRecipientAddress()];
      }
-     public function getMailHtmlContent(): string
+     public function sendEmail(array $emailData): array
      {
+-        var_dump($emailData);
++        
+         $sendSmtpEmail = new SendSmtpEmail($emailData);
+         try {
+             $response = $this->apiInstance->sendTransacEmail($sendSmtpEmail);
+
+
+9) /home/dev/work/emailsender/src/Infrastructure/Brevo/BrevoSender.php:36    [M] DecrementInteger
+
+--- Original
++++ New
+@@ @@
+             $response = $this->apiInstance->sendTransacEmail($sendSmtpEmail);
+             return ['messageId' => $response->getMessageId()];
+         } catch (Exception $e) {
+-            throw new ErrorMailSenderException("Erreur lors de l'envoi du mail", 500, $e);
++            throw new ErrorMailSenderException("Erreur lors de l'envoi du mail", 499, $e);
+         }
+     }
+ }
+
+
+10) /home/dev/work/emailsender/src/Infrastructure/Brevo/BrevoSender.php:36    [M] IncrementInteger
+
+--- Original
++++ New
+@@ @@
+             $response = $this->apiInstance->sendTransacEmail($sendSmtpEmail);
+             return ['messageId' => $response->getMessageId()];
+         } catch (Exception $e) {
+-            throw new ErrorMailSenderException("Erreur lors de l'envoi du mail", 500, $e);
++            throw new ErrorMailSenderException("Erreur lors de l'envoi du mail", 501, $e);
+         }
+     }
+ }
 
 
 Timed Out mutants:

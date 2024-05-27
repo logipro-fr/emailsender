@@ -3,8 +3,7 @@
 namespace EmailSender\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Brevo\Client\Model\SendSmtpEmail;
-use Brevo\Client\Model\CreateSmtpEmail;
+use EmailSender\Application\Service\SendMail\EmailApiInterface;
 use EmailSender\Application\Service\SendMail\EmailSender;
 use EmailSender\Application\Service\SendMail\Exceptions\ErrorAuthException;
 use EmailSender\Application\Service\SendMail\Exceptions\ErrorMailSenderException;
@@ -16,79 +15,67 @@ use EmailSender\Domain\Mail;
 use EmailSender\Domain\Recipient;
 use EmailSender\Domain\Sender;
 use EmailSender\Domain\Subject;
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
 
 class EmailSenderTest extends TestCase
 {
-    private const API_KEY = 'api-key';
     private const CURRENT_USER = "Mathis";
 
     public function testSendTransactionalEmailSuccess(): void
     {
-        $instanceEmailSender = new EmailSender(self::API_KEY, $this->createMockGuzzle(200));
+        $apiMock = $this->createMock(EmailApiInterface::class);
+        $apiMock->method('sendEmail')->willReturn(['messageId' => '1234']);
+        $instanceEmailSender = new EmailSender($apiMock);
         $mailData = $this->mailDataForTests();
         $instanceEmailSender->isAuthenticated(self::CURRENT_USER);
         $response = $instanceEmailSender->sendMail($mailData);
-        $this->assertInstanceOf(CreateSmtpEmail::class, $response);
-        $this->assertEquals('1234', $response->getMessageId());
+        $this->assertIsArray($response);
+        $this->assertEquals('1234', $response['messageId']);
     }
-
 
     public function testSendTransactionalEmailAuthFailure(): void
     {
-        $instanceEmailSender = new EmailSender(self::API_KEY, $this->createMockGuzzle(401));
+        $apiMock = $this->createMock(EmailApiInterface::class);
+        $instanceEmailSender = new EmailSender($apiMock);
         $mailData = $this->mailDataForTests();
         $this->expectException(ErrorAuthException::class);
         $instanceEmailSender->sendMail($mailData);
     }
 
-
     public function testSendTransactionalEmailSendingFailure(): void
     {
-        $instanceEmailSender = new EmailSender(self::API_KEY, $this->createMockGuzzle(500));
+        $apiMock = $this->createMock(EmailApiInterface::class);
+        $apiMock->method('sendEmail')->willThrowException(new ErrorMailSenderException());
+        $instanceEmailSender = new EmailSender($apiMock);
         $mailData = $this->mailDataForTests();
         $this->expectException(ErrorMailSenderException::class);
         $instanceEmailSender->isAuthenticated(self::CURRENT_USER);
         $instanceEmailSender->sendMail($mailData);
     }
 
-
-    public function testContentSmtpMail(): void
+    public function testContentEmailData(): void
     {
-        $instanceEmailSender = new EmailSender(self::API_KEY, $this->createMockGuzzle(200));
+        $apiMock = $this->createMock(EmailApiInterface::class);
+        $instanceEmailSender = new EmailSender($apiMock);
 
-        $smtpMailForTesting = new SendSmtpEmail([
+        $emailDataForTesting = [
             'subject' => $this->mailDataForTests()->mail->getSubject(),
             'sender' => $this->mailDataForTests()->mail->getSenderData(),
             'to' => $this->mailDataForTests()->mail->getRecipientData(),
             'htmlContent' => $this->mailDataForTests()->mail->getHtmlContent(),
             'attachment' => $this->mailDataForTests()->mail->getAttachment(),
-        ]);
+        ];
 
         $instanceEmailSender->isAuthenticated(self::CURRENT_USER);
-        $smtpContent = $instanceEmailSender->contentSmtpEmail($this->mailDataForTests());
-        $this->assertEquals($smtpContent, $smtpMailForTesting);
+        $emailData = $instanceEmailSender->contentEmailData($this->mailDataForTests());
+        $this->assertEquals($emailData, $emailDataForTesting);
     }
-
-    private function createMockGuzzle(int $statusCode): Client
-    {
-        $mock = new MockHandler([
-            new Response($statusCode, [], strval(json_encode(['messageId' => '1234']))),
-        ]);
-        $handlerStack = HandlerStack::create($mock);
-        return new Client(['handler' => $handlerStack]);
-    }
-
 
     public function mailDataForTests(): RequestEmailSender
     {
         $mail = new Mail(
-            new Subject('Test Email'),
+            new Subject('Test Email Infra'),
             new Sender(new Contact("Sender Name", "sender@example.com")),
-            new Recipient([new Contact("Recipient Name", "recipient@example.com")]),
+            new Recipient([new Contact("Mathis Tallaron", "mathis.tallaron@logipro.com")]),
             new HtmlContent('<html><body><h1>This is a test email</h1></body></html>'),
             new Attachment([])
         );
@@ -96,3 +83,19 @@ class EmailSenderTest extends TestCase
         return new RequestEmailSender($mail);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 use EmailSender\Application\Service\SendMail\EmailSender;
 use EmailSender\Application\Service\SendMail\RequestEmailSender;
 use EmailSender\Domain\Attachment;
+use EmailSender\Domain\Contact;
 use EmailSender\Domain\HtmlContent;
 use EmailSender\Domain\Mail;
 use EmailSender\Domain\Recipient;
@@ -32,8 +33,8 @@ class SenderMailTest extends TestCase
 
         $mail = new Mail(
             new Subject('Test Email'),
-            new Sender(['name' => 'Ton admirateur secret', 'email' => 'sender@example.com']),
-            new Recipient([['name' => 'Recipient Name', 'email' => 'morgan.chemarin@logipro.com']]),
+            new Sender(new Contact("Ton admirateur secret", "sender.exemple@domain.com")),
+            new Recipient([new Contact("Morgan chemarin", "morgan.chemarin@logipro.com")]),
             new HtmlContent('<html><body><h1>This is a test email</h1></body></html>'),
             new Attachment([$attachment])
         );
