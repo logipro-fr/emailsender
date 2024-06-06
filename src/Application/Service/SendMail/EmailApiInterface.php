@@ -3,12 +3,10 @@
 namespace EmailSender\Application\Service\SendMail;
 
 use EmailSender\Application\Service\SendMail\Exceptions\ErrorMailSenderException;
+use EmailSender\Domain\Mail;
+use EmailSender\Domain\Model\Mail\MailId;
 
 interface EmailApiInterface
 {
-    /**
-     * @param array<string, mixed> $emailData
-     * @return array<string, mixed>
-     */
-    public function sendEmail(array $emailData): array;
+    public function sendEmail(Mail $email): MailId;
 }

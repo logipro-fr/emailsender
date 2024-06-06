@@ -4,10 +4,14 @@ namespace EmailSender\Application\Service\SendMail;
 
 use EmailSender\Domain\Mail;
 
-class RequestEmailSender implements RequestInterface
+class RequestEmailSender
 {
     public function __construct(
-        public readonly Mail $mail
+        public readonly string $sender,
+        /** @var array<string> */
+        public readonly array $recipient,
+        public readonly string $subject,
+        public readonly string $content,
     ) {
     }
 }

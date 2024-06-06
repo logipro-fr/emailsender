@@ -6,96 +6,92 @@ use PHPUnit\Framework\TestCase;
 use EmailSender\Application\Service\SendMail\EmailApiInterface;
 use EmailSender\Application\Service\SendMail\EmailSender;
 use EmailSender\Application\Service\SendMail\Exceptions\ErrorAuthException;
-use EmailSender\Application\Service\SendMail\Exceptions\ErrorMailSenderException;
+use EmailSender\Application\Service\SendMail\MailFactory;
 use EmailSender\Application\Service\SendMail\RequestEmailSender;
+use EmailSender\Application\Service\SendMail\ResponseSendMail;
 use EmailSender\Domain\Attachment;
 use EmailSender\Domain\Contact;
 use EmailSender\Domain\HtmlContent;
 use EmailSender\Domain\Mail;
+use EmailSender\Domain\Model\Mail\MailId;
 use EmailSender\Domain\Recipient;
 use EmailSender\Domain\Sender;
 use EmailSender\Domain\Subject;
+use EmailSender\Infrastructure\Persistance\EmailSenderRepositoryInMemory;
 
 class EmailSenderTest extends TestCase
 {
     private const CURRENT_USER = "Mathis";
+    private RequestEmailSender $request;
+
+    public function setUp(): void
+    {
+        $this->request = new RequestEmailSender(
+            "Pedro, pedro@gmail.com",
+            ["Pedro, pedro@gmail.com", "Mathis, Mathis@gmail.com"],
+            "Email test",
+            "<html><body><h1>This is a test email</h1></body></html>",
+        );
+    }
 
     public function testSendTransactionalEmailSuccess(): void
     {
         $apiMock = $this->createMock(EmailApiInterface::class);
-        $apiMock->method('sendEmail')->willReturn(['messageId' => '1234']);
-        $instanceEmailSender = new EmailSender($apiMock);
-        $mailData = $this->mailDataForTests();
-        $instanceEmailSender->isAuthenticated(self::CURRENT_USER);
-        $response = $instanceEmailSender->sendMail($mailData);
-        $this->assertIsArray($response);
-        $this->assertEquals('1234', $response['messageId']);
+        $mailId = new MailId("test");
+        $apiMock->method('sendEmail')->willReturn($mailId);
+        $repository = new EmailSenderRepositoryInMemory();
+        $service = new EmailSender($repository, $apiMock, "test");
+        $service->isAuthenticated(self::CURRENT_USER);
+
+        $service->execute($this->request);
+        $response = $service->getResponse();
+
+        $this->assertInstanceOf(ResponseSendMail::class, $response);
+        $this->assertEquals('test', $response->mailId);
+
+
+        $this->assertNotEmpty($repository->findById($mailId));
     }
 
     public function testSendTransactionalEmailAuthFailure(): void
     {
         $apiMock = $this->createMock(EmailApiInterface::class);
-        $instanceEmailSender = new EmailSender($apiMock);
-        $mailData = $this->mailDataForTests();
+        $repository = new EmailSenderRepositoryInMemory();
+        $instanceEmailSender = new EmailSender($repository, $apiMock);
+        $this->mailDataForTests();
+        $this->expectExceptionMessage("Utilisateur non authentifié");
         $this->expectException(ErrorAuthException::class);
-        $instanceEmailSender->sendMail($mailData);
+        $instanceEmailSender->execute($this->request);
     }
 
-    public function testSendTransactionalEmailSendingFailure(): void
+    public function testMailFactory(): void
     {
-        $apiMock = $this->createMock(EmailApiInterface::class);
-        $apiMock->method('sendEmail')->willThrowException(new ErrorMailSenderException());
-        $instanceEmailSender = new EmailSender($apiMock);
-        $mailData = $this->mailDataForTests();
-        $this->expectException(ErrorMailSenderException::class);
-        $instanceEmailSender->isAuthenticated(self::CURRENT_USER);
-        $instanceEmailSender->sendMail($mailData);
+        $factory = new MailFactory();
+        $mail = $factory->buildMailFromRequest($this->request);
+        $this->assertInstanceOf(Mail::class, $mail);
+        $this->assertEquals('Pedro', $mail->getSenderName());
+        $this->assertEquals('pedro@gmail.com', $mail->getSenderAddress());
+        $this->assertEquals('Mathis', $mail->getRecipientName(1));
+        $this->assertEquals('Mathis@gmail.com', $mail->getRecipientAddress(1));
+        $this->assertEquals('Pedro', $mail->getRecipientName(0));
+        $this->assertEquals('pedro@gmail.com', $mail->getRecipientAddress(0));
     }
 
-    public function testContentEmailData(): void
+    public function testMailFactoryWithCustomId(): void
     {
-        $apiMock = $this->createMock(EmailApiInterface::class);
-        $instanceEmailSender = new EmailSender($apiMock);
-
-        $emailDataForTesting = [
-            'subject' => $this->mailDataForTests()->mail->getSubject(),
-            'sender' => $this->mailDataForTests()->mail->getSenderData(),
-            'to' => $this->mailDataForTests()->mail->getRecipientData(),
-            'htmlContent' => $this->mailDataForTests()->mail->getHtmlContent(),
-            'attachment' => $this->mailDataForTests()->mail->getAttachment(),
-        ];
-
-        $instanceEmailSender->isAuthenticated(self::CURRENT_USER);
-        $emailData = $instanceEmailSender->contentEmailData($this->mailDataForTests());
-        $this->assertEquals($emailData, $emailDataForTesting);
+        $factory = new MailFactory();
+        $mail = $factory->buildMailFromRequest($this->request, new MailId('test'));
+        $this->assertEquals(new MailId('test'), $mail->getMailId());
     }
 
-    public function mailDataForTests(): RequestEmailSender
+    public function mailDataForTests(): Mail
     {
-        $mail = new Mail(
+        return new Mail(
             new Subject('Test Email Infra'),
             new Sender(new Contact("Sender Name", "sender@example.com")),
             new Recipient([new Contact("Mathis Tallaron", "mathis.tallaron@logipro.com")]),
             new HtmlContent('<html><body><h1>This is a test email</h1></body></html>'),
             new Attachment([])
         );
-
-        return new RequestEmailSender($mail);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

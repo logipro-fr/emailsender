@@ -2,6 +2,8 @@
 
 namespace EmailSender\Domain;
 
+use EmailSender\Domain\Model\Mail\MailId;
+
 class Mail
 {
     public function __construct(
@@ -9,7 +11,8 @@ class Mail
         private Sender $sender,
         private Recipient $recipient,
         private HtmlContent $htmlContent,
-        private Attachment $attachment
+        private Attachment $attachment,
+        private MailId $mailId = new MailId(),
     ) {
     }
 
@@ -36,22 +39,22 @@ class Mail
         return ['name' => $this->getSenderName(), 'email' => $this->getSenderAddress()];
     }
 
-    public function getRecipientName(): string
+    public function getRecipientName(int $rank): string
     {
-        return $this->recipient->getRecipientName(0);
+        return $this->recipient->getRecipientName($rank);
     }
 
-    public function getRecipientAddress(): string
+    public function getRecipientAddress(int $rank): string
     {
-        return $this->recipient->getRecipientAddress(0);
+        return $this->recipient->getRecipientAddress($rank);
     }
 
     /**
      * @return array<string, string>
      */
-    public function getRecipientData(): array
+    public function getRecipientData(int $rank): array
     {
-        return ['name' => $this->getRecipientName(), 'email' => $this->getRecipientAddress()];
+        return ['name' => $this->getRecipientName($rank), 'email' => $this->getRecipientAddress($rank)];
     }
 
     public function getHtmlContent(): string
@@ -65,5 +68,10 @@ class Mail
     public function getAttachment(): array
     {
         return $this->attachment->getAttachment();
+    }
+
+    public function getMailId(): MailId
+    {
+        return $this->mailId;
     }
 }

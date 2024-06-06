@@ -2,6 +2,9 @@
 
 namespace EmailSender\Domain;
 
+use InvalidArgumentException;
+use OutOfBoundsException;
+
 class Recipient
 {
     /**
@@ -9,15 +12,26 @@ class Recipient
      */
     public function __construct(private array $recipient)
     {
+        if (empty($recipient)) {
+            throw new InvalidArgumentException("Recipients cannot be empty");
+        }
     }
 
-    public function getRecipientName(int $rang): string
+    public function getRecipientName(int $rank): string
     {
-        return $this->recipient[$rang]->getName();
+        if (!isset($this->recipient[$rank])) {
+            throw new OutOfBoundsException("This recipient rank doesn't exist");
+        }
+
+        return $this->recipient[$rank]->getName();
     }
 
-    public function getRecipientAddress(int $rang): string
+    public function getRecipientAddress(int $rank): string
     {
-        return $this->recipient[$rang]->getAddress();
+        if (!isset($this->recipient[$rank])) {
+            throw new OutOfBoundsException("This recipient rank doesn't exist");
+        }
+
+        return $this->recipient[$rank]->getAddress();
     }
 }

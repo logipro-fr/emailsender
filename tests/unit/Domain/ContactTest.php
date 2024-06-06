@@ -4,6 +4,7 @@ namespace EmailSender\Tests\Domain;
 
 use EmailSender\Application\Service\SendMail\Exceptions\MalformedAddressException;
 use EmailSender\Domain\Contact;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class ContactTest extends TestCase
@@ -26,6 +27,20 @@ class ContactTest extends TestCase
                 $this->assertInstanceOf(MalformedAddressException::class, $e);
             }
         }
+    }
+
+    public function testContactAddressCannotBeEmpty(): void
+    {
+        $this->expectExceptionMessage("Contact address cannot be empty");
+        $this->expectException(InvalidArgumentException::class);
+        (new Contact("Sender Name", ""))->getAddress();
+    }
+
+    public function testContactNameCannotBeEmpty(): void
+    {
+        $this->expectExceptionMessage("Contact name cannot be empty");
+        $this->expectException(InvalidArgumentException::class);
+        (new Contact("", "sender@name.com"))->getName();
     }
 
     /**

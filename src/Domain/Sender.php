@@ -2,6 +2,8 @@
 
 namespace EmailSender\Domain;
 
+use ArgumentCountError;
+
 class Sender
 {
     /**
