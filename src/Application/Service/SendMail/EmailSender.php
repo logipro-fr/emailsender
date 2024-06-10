@@ -9,11 +9,6 @@ use EmailSender\Domain\Model\Mail\MailId;
 
 class EmailSender
 {
-    private string $user;
-    private const HTTP_ERROR_401 = 401;
-    //private const HTTP_ERROR_500 = 500;
-    //private const ERROR_SENDING = "Erreur lors de l'envoi du mail";
-    private const ERROR_AUTH = "Utilisateur non authentifié";
 
     private ResponseSendMail $response;
 
@@ -21,18 +16,8 @@ class EmailSender
     {
     }
 
-    public function isAuthenticated(string $user): ResponseIsAuth
-    {
-        $this->user = $user;
-        return new ResponseIsAuth($this->user);
-    }
-
     public function execute(RequestEmailSender $request): void
     {
-
-        if (!isset($this->user)) {
-            throw new ErrorAuthException(self::ERROR_AUTH, self::HTTP_ERROR_401);
-        }
 
         if ($request == null) {
             throw new \InvalidArgumentException("Request cannot be null");

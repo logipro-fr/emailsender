@@ -41,7 +41,6 @@ class EmailSenderTest extends TestCase
         $apiMock->method('sendEmail')->willReturn($mailId);
         $repository = new EmailSenderRepositoryInMemory();
         $service = new EmailSender($repository, $apiMock, "test");
-        $service->isAuthenticated(self::CURRENT_USER);
 
         $service->execute($this->request);
         $response = $service->getResponse();
@@ -51,17 +50,6 @@ class EmailSenderTest extends TestCase
 
 
         $this->assertNotEmpty($repository->findById($mailId));
-    }
-
-    public function testSendTransactionalEmailAuthFailure(): void
-    {
-        $apiMock = $this->createMock(EmailApiInterface::class);
-        $repository = new EmailSenderRepositoryInMemory();
-        $instanceEmailSender = new EmailSender($repository, $apiMock);
-        $this->mailDataForTests();
-        $this->expectExceptionMessage("Utilisateur non authentifié");
-        $this->expectException(ErrorAuthException::class);
-        $instanceEmailSender->execute($this->request);
     }
 
     public function testMailFactory(): void
