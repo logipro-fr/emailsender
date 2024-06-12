@@ -25,16 +25,38 @@ class EmailSenderRepositoryInMemoryTest extends TestCase
     public function testAddTrafficData(): void
     {
         $dataId = new MailId();
-        $mailData = new Mail(
-            new Subject('Test Email Infra Repo'),
-            new Sender(new Contact("Sender Name", "sender@example.com")),
-            new Recipient([new Contact("morgan chemarin", "morgan.chemarin@logipro.com")]),
-            new HtmlContent('<html><body><h1>This is a test email</h1></body></html>'),
-            new Attachment([]),
-            $dataId
-        );
+        $mailData = $this->mailDataForTests($dataId);
 
         $this->repository->add($mailData);
         $this->assertNotEmpty($this->repository->findById($dataId));
+    }
+
+    public function testFindByTrafficData(): void
+    {
+        $dataId1 = new MailId();
+        $mailData1 = $this->mailDataForTests($dataId1);
+
+        $dataId2 = new MailId();
+        $mailData2 = $this->mailDataForTests($dataId2);
+
+        $this->repository->add($mailData1);
+        $this->repository->add($mailData2);
+
+        $found1 = $this->repository->findById($dataId1);
+        $found2 = $this->repository->findById($dataId2);
+
+        $this->assertFalse($found1->getMailId()->equals($found2->getMailId()));
+    }
+
+    private function mailDataForTests(MailId $mailId): Mail
+    {
+        return new Mail(
+            new Subject('Test Email Infra Repo'),
+            new Sender(new Contact("Sender Name", "sender@example.com")),
+            new Recipient([new Contact("Recipient Name", "recipient@example.com")]),
+            new HtmlContent('<html><body><h1>This is a test email</h1></body></html>'),
+            new Attachment([]),
+            $mailId
+        );
     }
 }

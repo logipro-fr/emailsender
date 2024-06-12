@@ -9,11 +9,13 @@ use EmailSender\Domain\Model\Mail\MailId;
 
 class EmailSender
 {
-
     private ResponseSendMail $response;
 
-    public function __construct(private EmailSenderRepositoryInterface $respository, private EmailApiInterface $emailApi, private string $mailId = "")
-    {
+    public function __construct(
+        private EmailSenderRepositoryInterface $respository,
+        private EmailApiInterface $emailApi,
+        private string $mailId = ""
+    ) {
     }
 
     public function execute(RequestEmailSender $request): void
@@ -23,10 +25,9 @@ class EmailSender
             throw new \InvalidArgumentException("Request cannot be null");
         }
         $mail = (new MailFactory())->buildMailFromRequest($request, new MailId($this->mailId));
-        $this->emailApi->sendEmail($mail);
+        $this->emailApi->sendMail($request);
 
         $this->respository->add($mail);
-
         $this->response = new ResponseSendMail($mail->getMailId());
     }
 

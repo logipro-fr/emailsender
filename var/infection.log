@@ -1,154 +1,64 @@
 Escaped mutants:
 ================
 
-1) /home/dev/work/emailsender/src/Domain/Contact.php:16    [M] Throw_
+1) /home/dev/work/emailsender/src/Application/Service/SendMail/EmailSender.php:26    [M] MethodCallRemoval
 
 --- Original
 +++ New
 @@ @@
-     public function __construct(string $name, string $address)
-     {
-         if (!$this->isValidEmailAddress($address)) {
--            throw new MalformedAddressException("Invalid email address: {$address}");
-+            new MalformedAddressException("Invalid email address: {$address}");
+             throw new \InvalidArgumentException("Request cannot be null");
          }
-         $this->name = $name;
-         $this->address = $address;
-
-
-2) /home/dev/work/emailsender/src/Domain/Mail.php:36    [M] ArrayItem
-
---- Original
-+++ New
-@@ @@
-      */
-     public function getSenderData(): array
-     {
--        return ['name' => $this->getSenderName(), 'email' => $this->getSenderAddress()];
-+        return ['name' => $this->getSenderName(), 'email' > $this->getSenderAddress()];
-     }
-     public function getRecipientName(): string
-     {
-
-
-3) /home/dev/work/emailsender/src/Domain/Mail.php:36    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-      */
-     public function getSenderData(): array
-     {
--        return ['name' => $this->getSenderName(), 'email' => $this->getSenderAddress()];
-+        return ['email' => $this->getSenderAddress()];
-     }
-     public function getRecipientName(): string
-     {
-
-
-4) /home/dev/work/emailsender/src/Domain/Mail.php:36    [M] ArrayItem
-
---- Original
-+++ New
-@@ @@
-      */
-     public function getSenderData(): array
-     {
--        return ['name' => $this->getSenderName(), 'email' => $this->getSenderAddress()];
-+        return ['name' > $this->getSenderName(), 'email' => $this->getSenderAddress()];
-     }
-     public function getRecipientName(): string
-     {
-
-
-5) /home/dev/work/emailsender/src/Domain/Mail.php:54    [M] ArrayItem
-
---- Original
-+++ New
-@@ @@
-      */
-     public function getRecipientData(): array
-     {
--        return ['name' => $this->getRecipientName(), 'email' => $this->getRecipientAddress()];
-+        return ['name' > $this->getRecipientName(), 'email' => $this->getRecipientAddress()];
-     }
-     public function getHtmlContent(): string
-     {
-
-
-6) /home/dev/work/emailsender/src/Domain/Mail.php:54    [M] ArrayItem
-
---- Original
-+++ New
-@@ @@
-      */
-     public function getRecipientData(): array
-     {
--        return ['name' => $this->getRecipientName(), 'email' => $this->getRecipientAddress()];
-+        return ['name' => $this->getRecipientName(), 'email' > $this->getRecipientAddress()];
-     }
-     public function getHtmlContent(): string
-     {
-
-
-7) /home/dev/work/emailsender/src/Domain/Mail.php:54    [M] ArrayItemRemoval
-
---- Original
-+++ New
-@@ @@
-      */
-     public function getRecipientData(): array
-     {
--        return ['name' => $this->getRecipientName(), 'email' => $this->getRecipientAddress()];
-+        return ['email' => $this->getRecipientAddress()];
-     }
-     public function getHtmlContent(): string
-     {
-
-
-8) /home/dev/work/emailsender/src/Infrastructure/Brevo/BrevoSender.php:29    [M] FunctionCallRemoval
-
---- Original
-+++ New
-@@ @@
-     }
-     public function sendEmail(array $emailData): array
-     {
--        var_dump($emailData);
+         $mail = (new MailFactory())->buildMailFromRequest($request, new MailId($this->mailId));
+-        $this->emailApi->sendEmail($mail);
 +        
-         $sendSmtpEmail = new SendSmtpEmail($emailData);
-         try {
-             $response = $this->apiInstance->sendTransacEmail($sendSmtpEmail);
+         $this->respository->add($mail);
+         $this->response = new ResponseSendMail($mail->getMailId());
+     }
 
 
-9) /home/dev/work/emailsender/src/Infrastructure/Brevo/BrevoSender.php:36    [M] DecrementInteger
+2) /home/dev/work/emailsender/src/Application/Service/SendMail/MailFactory.php:37    [M] MethodCallRemoval
 
 --- Original
 +++ New
 @@ @@
-             $response = $this->apiInstance->sendTransacEmail($sendSmtpEmail);
-             return ['messageId' => $response->getMessageId()];
-         } catch (Exception $e) {
--            throw new ErrorMailSenderException("Erreur lors de l'envoi du mail", 500, $e);
-+            throw new ErrorMailSenderException("Erreur lors de l'envoi du mail", 499, $e);
-         }
+      */
+     private function buildContact(string $sentence, string $separator): Contact
+     {
+-        $this->verifySeparator($separator);
++        
+         $tab = explode($separator, $sentence);
+         return new Contact($tab[0], $tab[1]);
      }
- }
 
 
-10) /home/dev/work/emailsender/src/Infrastructure/Brevo/BrevoSender.php:36    [M] IncrementInteger
+3) /home/dev/work/emailsender/src/Application/Service/SendMail/MailFactory.php:49    [M] MethodCallRemoval
 
 --- Original
 +++ New
 @@ @@
-             $response = $this->apiInstance->sendTransacEmail($sendSmtpEmail);
-             return ['messageId' => $response->getMessageId()];
-         } catch (Exception $e) {
--            throw new ErrorMailSenderException("Erreur lors de l'envoi du mail", 500, $e);
-+            throw new ErrorMailSenderException("Erreur lors de l'envoi du mail", 501, $e);
+      */
+     private function buildRecipient(array $recipients, string $separator): Recipient
+     {
+-        $this->verifySeparator($separator);
++        
+         /** @var array<Int, Contact> */
+         $result = array();
+         for ($i = 0; $i < count($recipients); $i++) {
+
+
+4) /home/dev/work/emailsender/src/Application/Service/SendMail/MailFactory.php:54    [M] MethodCallRemoval
+
+--- Original
++++ New
+@@ @@
+         /** @var array<Int, Contact> */
+         $result = array();
+         for ($i = 0; $i < count($recipients); $i++) {
+-            $this->verifySeparator($separator);
++            
+             $result[$i] = $this->buildContact($recipients[$i], $separator);
          }
-     }
- }
+         return new Recipient($result);
 
 
 Timed Out mutants:
@@ -159,3 +69,217 @@ Skipped mutants:
 
 Not Covered mutants:
 ====================
+
+1) /home/dev/work/emailsender/src/Application/Service/SendMail/EmailSender.php:23    [M] Throw_
+
+--- Original
++++ New
+@@ @@
+     public function execute(RequestEmailSender $request): void
+     {
+         if ($request == null) {
+-            throw new \InvalidArgumentException("Request cannot be null");
++            new \InvalidArgumentException("Request cannot be null");
+         }
+         $mail = (new MailFactory())->buildMailFromRequest($request, new MailId($this->mailId));
+         $this->emailApi->sendEmail($mail);
+
+
+2) /home/dev/work/emailsender/src/Application/Service/SendMail/MailFactory.php:63    [M] Throw_
+
+--- Original
++++ New
+@@ @@
+     private function verifySeparator(string $separator): string
+     {
+         if (empty($separator)) {
+-            throw new InvalidArgumentException("Separator cannot be empty");
++            new InvalidArgumentException("Separator cannot be empty");
+         } else {
+             return $separator;
+         }
+     }
+ }
+
+
+3) /home/dev/work/emailsender/src/Domain/Contact.php:40    [M] Throw_
+
+--- Original
++++ New
+@@ @@
+     public function getAddress(): string
+     {
+         if (!$this->isValidEmailAddress($this->address)) {
+-            throw new MalformedAddressException("Invalid email address: {$this->address}");
++            new MalformedAddressException("Invalid email address: {$this->address}");
+         }
+         return $this->address;
+     }
+ }
+
+
+4) /home/dev/work/emailsender/src/Domain/Mail.php:37    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @return array<string, string>
+      */
+-    public function getSenderData(): array
++    protected function getSenderData(): array
+     {
+         return ['name' => $this->getSenderName(), 'email' => $this->getSenderAddress()];
+     }
+
+
+5) /home/dev/work/emailsender/src/Domain/Mail.php:39    [M] ArrayItem
+
+--- Original
++++ New
+@@ @@
+      */
+     public function getSenderData(): array
+     {
+-        return ['name' => $this->getSenderName(), 'email' => $this->getSenderAddress()];
++        return ['name' > $this->getSenderName(), 'email' => $this->getSenderAddress()];
+     }
+     public function getRecipientName(int $rank): string
+     {
+
+
+6) /home/dev/work/emailsender/src/Domain/Mail.php:39    [M] ArrayItem
+
+--- Original
++++ New
+@@ @@
+      */
+     public function getSenderData(): array
+     {
+-        return ['name' => $this->getSenderName(), 'email' => $this->getSenderAddress()];
++        return ['name' => $this->getSenderName(), 'email' > $this->getSenderAddress()];
+     }
+     public function getRecipientName(int $rank): string
+     {
+
+
+7) /home/dev/work/emailsender/src/Domain/Mail.php:39    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+      */
+     public function getSenderData(): array
+     {
+-        return ['name' => $this->getSenderName(), 'email' => $this->getSenderAddress()];
++        return ['email' => $this->getSenderAddress()];
+     }
+     public function getRecipientName(int $rank): string
+     {
+
+
+8) /home/dev/work/emailsender/src/Domain/Mail.php:55    [M] PublicVisibility
+
+--- Original
++++ New
+@@ @@
+     /**
+      * @return array<string, string>
+      */
+-    public function getRecipientData(int $rank): array
++    protected function getRecipientData(int $rank): array
+     {
+         return ['name' => $this->getRecipientName($rank), 'email' => $this->getRecipientAddress($rank)];
+     }
+
+
+9) /home/dev/work/emailsender/src/Domain/Mail.php:57    [M] ArrayItem
+
+--- Original
++++ New
+@@ @@
+      */
+     public function getRecipientData(int $rank): array
+     {
+-        return ['name' => $this->getRecipientName($rank), 'email' => $this->getRecipientAddress($rank)];
++        return ['name' > $this->getRecipientName($rank), 'email' => $this->getRecipientAddress($rank)];
+     }
+     public function getHtmlContent(): string
+     {
+
+
+10) /home/dev/work/emailsender/src/Domain/Mail.php:57    [M] ArrayItem
+
+--- Original
++++ New
+@@ @@
+      */
+     public function getRecipientData(int $rank): array
+     {
+-        return ['name' => $this->getRecipientName($rank), 'email' => $this->getRecipientAddress($rank)];
++        return ['name' => $this->getRecipientName($rank), 'email' > $this->getRecipientAddress($rank)];
+     }
+     public function getHtmlContent(): string
+     {
+
+
+11) /home/dev/work/emailsender/src/Domain/Mail.php:57    [M] ArrayItemRemoval
+
+--- Original
++++ New
+@@ @@
+      */
+     public function getRecipientData(int $rank): array
+     {
+-        return ['name' => $this->getRecipientName($rank), 'email' => $this->getRecipientAddress($rank)];
++        return ['email' => $this->getRecipientAddress($rank)];
+     }
+     public function getHtmlContent(): string
+     {
+
+
+12) /home/dev/work/emailsender/src/Domain/Model/Mail/MailId.php:26    [M] TrueValue
+
+--- Original
++++ New
+@@ @@
+     public function equals(MailId $otherId): bool
+     {
+         if ($this->id === $otherId->id) {
+-            return true;
++            return false;
+         }
+         return false;
+     }
+ }
+
+
+13) /home/dev/work/emailsender/src/Domain/Recipient.php:32    [M] Throw_
+
+--- Original
++++ New
+@@ @@
+     public function getRecipientAddress(int $rank): string
+     {
+         if (!isset($this->recipient[$rank])) {
+-            throw new OutOfBoundsException("This recipient rank doesn't exist");
++            new OutOfBoundsException("This recipient rank doesn't exist");
+         }
+         return $this->recipient[$rank]->getAddress();
+     }
+ }
+
+
+14) /home/dev/work/emailsender/src/Infrastructure/Brevo/BrevoSender.php:40    [M] Throw_
+
+--- Original
++++ New
+@@ @@
+             //return ['messageId' => $response->getMessageId()];
+             return $this->mail->getResponse();
+         } catch (Exception $e) {
+-            throw new ErrorMailSenderException("Erreur lors de l'envoi du mail", self::HTTP_ERROR_500, $e);
++            new ErrorMailSenderException("Erreur lors de l'envoi du mail", self::HTTP_ERROR_500, $e);
+         }
+     }
+ }

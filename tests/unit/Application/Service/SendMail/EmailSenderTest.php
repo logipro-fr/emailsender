@@ -21,7 +21,6 @@ use EmailSender\Infrastructure\Persistance\EmailSenderRepositoryInMemory;
 
 class EmailSenderTest extends TestCase
 {
-    private const CURRENT_USER = "Mathis";
     private RequestEmailSender $request;
 
     public function setUp(): void
@@ -38,7 +37,7 @@ class EmailSenderTest extends TestCase
     {
         $apiMock = $this->createMock(EmailApiInterface::class);
         $mailId = new MailId("test");
-        $apiMock->method('sendEmail')->willReturn($mailId);
+        $apiMock->method('sendMail')->willReturn(true);
         $repository = new EmailSenderRepositoryInMemory();
         $service = new EmailSender($repository, $apiMock, "test");
 
