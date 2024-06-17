@@ -2,14 +2,13 @@
 
 namespace EmailSender\Application\Service\SendMail;
 
-use EmailSender\Application\Service\SendMail\Exceptions\ErrorAuthException;
-use EmailSender\Application\Service\SendMail\Exceptions\ErrorMailSenderException;
 use EmailSender\Domain\EmailSenderRepositoryInterface;
 use EmailSender\Domain\Model\Mail\MailId;
 
 class EmailSender
 {
     private ResponseSendMail $response;
+    private const REQUEST_NULL_MESSAGE = "Request cannot be null";
 
     public function __construct(
         private EmailSenderRepositoryInterface $respository,
@@ -22,7 +21,7 @@ class EmailSender
     {
 
         if ($request == null) {
-            throw new \InvalidArgumentException("Request cannot be null");
+            throw new \InvalidArgumentException(self::REQUEST_NULL_MESSAGE);
         }
         $mail = (new MailFactory())->buildMailFromRequest($request, new MailId($this->mailId));
         $this->emailApi->sendMail($request);

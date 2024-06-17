@@ -19,7 +19,14 @@
         "symfony/mailer": "^7.0",
         "symfony/brevo-mailer": "^7.0",
         "symfony/http-client": "^7.0",
-        "getbrevo/brevo-php": "^2.0"
+        "getbrevo/brevo-php": "^2.0",
+        "symfony/framework-bundle": "^7.0",
+        "symfony/runtime": "^7.1",
+        "symfony/routing": "^7.1",
+        "symfony/browser-kit": "^7.1",
+        "symfony/orm-pack": "^2.4",
+        "symfony/console": "^7.1",
+        "symfony/http-foundation": "^7.1"
     },
     "require-dev": {
         "infection/extension-installer": "0.1.2",
@@ -38,12 +45,13 @@
     "autoload-dev": {
         "psr-4" : {
             "EmailSender\\Tests\\" : "tests/unit",
-            "EmailSender\\Integration\\" : "tests/integration",
+            "EmailSender\\Integration\\" : "tests/integration"
         }
     },
     "config": {
         "allow-plugins": {
-            "infection/extension-installer": true
+            "infection/extension-installer": true,
+            "symfony/runtime": true
         }
     }
 }

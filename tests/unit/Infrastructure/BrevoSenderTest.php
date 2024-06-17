@@ -16,10 +16,11 @@ use GuzzleHttp\Psr7\Response;
 class BrevoSenderTest extends TestCase
 {
     private const API_KEY = 'api_key';
+    private const ERROR_500_MESSAGE = "Erreur lors de l'envoi du mail";
 
     private RequestEmailSender $request;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->request = new RequestEmailSender(
             "Pedro, pedro@gmail.com",
@@ -39,16 +40,14 @@ class BrevoSenderTest extends TestCase
     public function testSendEmailFailure(): void
     {
         $this->expectException(ErrorMailSenderException::class);
-        $this->expectExceptionMessage("Erreur lors de l'envoi du mail");
+        $this->expectExceptionMessage(self::ERROR_500_MESSAGE);
         (new BrevoSender(self::API_KEY, $this->createMockGuzzle(500)));
     }
-
-
 
     private function createMockGuzzle(int $statusCode): Client
     {
         if ($statusCode == 500) {
-            throw new ErrorMailSenderException("Erreur lors de l'envoi du mail");
+            throw new ErrorMailSenderException(self::ERROR_500_MESSAGE);
         }
 
         $mock = new MockHandler([
