@@ -23,7 +23,7 @@ class EmailSenderTest extends TestCase
 {
     private RequestEmailSender $request;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->request = new RequestEmailSender(
             "Pedro, pedro@gmail.com",
