@@ -8,9 +8,9 @@ use Brevo\Client\Api\TransactionalEmailsApi;
 use Brevo\Client\Configuration;
 use Brevo\Client\Model\CreateSmtpEmail;
 use Brevo\Client\Model\SendSmtpEmail;
-use EmailSender\Application\Service\SendMail\EmailSender;
+use EmailSender\Application\Service\SendMail\SendMail;
 use EmailSender\Application\Service\SendMail\MailFactory;
-use EmailSender\Application\Service\SendMail\RequestEmailSender;
+use EmailSender\Application\Service\SendMail\SendMailRequest;
 use EmailSender\Domain\Model\Mail\MailId;
 use EmailSender\Infrastructure\Persistance\EmailSenderRepositoryInMemory;
 use GuzzleHttp\Client;
@@ -31,7 +31,7 @@ class BrevoSender implements EmailApiInterface
         $this->emailApi = new TransactionalEmailsApi($client, $config);
     }
 
-    public function sendMail(RequestEmailSender $request): bool
+    public function sendMail(SendMailRequest $request): bool
     {
         try {
             $mail = (new MailFactory())->buildMailFromRequest($request);

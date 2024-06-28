@@ -4,7 +4,7 @@ namespace EmailSender\Application\Service\SendMail;
 
 use EmailSender\Domain\Mail;
 
-class RequestEmailSender
+class SendMailRequest
 {
     public function __construct(
         public readonly string $sender,

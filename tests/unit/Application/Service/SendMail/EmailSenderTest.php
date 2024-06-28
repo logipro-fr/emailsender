@@ -4,11 +4,11 @@ namespace EmailSender\Tests;
 
 use PHPUnit\Framework\TestCase;
 use EmailSender\Application\Service\SendMail\EmailApiInterface;
-use EmailSender\Application\Service\SendMail\EmailSender;
+use EmailSender\Application\Service\SendMail\SendMail;
 use EmailSender\Application\Service\SendMail\Exceptions\ErrorAuthException;
 use EmailSender\Application\Service\SendMail\MailFactory;
-use EmailSender\Application\Service\SendMail\RequestEmailSender;
-use EmailSender\Application\Service\SendMail\ResponseSendMail;
+use EmailSender\Application\Service\SendMail\SendMailRequest;
+use EmailSender\Application\Service\SendMail\SendMailResponse;
 use EmailSender\Domain\Attachment;
 use EmailSender\Domain\Contact;
 use EmailSender\Domain\HtmlContent;
@@ -18,14 +18,15 @@ use EmailSender\Domain\Recipient;
 use EmailSender\Domain\Sender;
 use EmailSender\Domain\Subject;
 use EmailSender\Infrastructure\Persistance\EmailSenderRepositoryInMemory;
+use InvalidArgumentException;
 
 class EmailSenderTest extends TestCase
 {
-    private RequestEmailSender $request;
+    private SendMailRequest $request;
 
     protected function setUp(): void
     {
-        $this->request = new RequestEmailSender(
+        $this->request = new SendMailRequest(
             "Pedro, pedro@gmail.com",
             ["Pedro, pedro@gmail.com", "Mathis, Mathis@gmail.com"],
             "Email test",
@@ -39,12 +40,12 @@ class EmailSenderTest extends TestCase
         $mailId = new MailId("test");
         $apiMock->method('sendMail')->willReturn(true);
         $repository = new EmailSenderRepositoryInMemory();
-        $service = new EmailSender($repository, $apiMock, "test");
+        $service = new SendMail($repository, $apiMock, "test");
 
         $service->execute($this->request);
         $response = $service->getResponse();
 
-        $this->assertInstanceOf(ResponseSendMail::class, $response);
+        $this->assertInstanceOf(SendMailResponse::class, $response);
         $this->assertEquals('test', $response->mailId);
 
 

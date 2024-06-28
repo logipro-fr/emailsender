@@ -46,4 +46,48 @@ class MailTest extends TestCase
 
         $this->assertEquals("test", $mail->getMailId());
     }
+
+    public function testGetSenderDataReturnsCorrectData(): void
+    {
+        $sender = new Sender(new Contact("Sender Name", "sender@example.com"));
+        $recipient = new Recipient([
+            new Contact('Jane Smith', 'jane.smith@example.com'),
+            new Contact('Alice Johnson', 'alice.johnson@example.com')
+        ]);
+        $mailId = new MailId();
+        $mail = new Mail(
+            new Subject('Test Email'),
+            $sender,
+            $recipient,
+            new HtmlContent('<html><body><h1>This is a test email</h1></body></html>'),
+            new Attachment([]),
+            $mailId
+        );
+
+        $senderData = $mail->getSenderData();
+
+        $this->assertSame(['name' => 'Sender Name', 'email' => 'sender@example.com'], $senderData);
+    }
+
+    public function testGetRecipientDataReturnsCorrectData(): void
+    {
+        $sender = new Sender(new Contact('John Doe', 'john.doe@example.com'));
+        $recipient = new Recipient([
+            new Contact('Jane Smith', 'jane.smith@example.com'),
+            new Contact('Alice Johnson', 'alice.johnson@example.com')
+        ]);
+        $mailId = new MailId();
+        $mail = new Mail(
+            new Subject('Test Email'),
+            $sender,
+            $recipient,
+            new HtmlContent('<html><body><h1>This is a test email</h1></body></html>'),
+            new Attachment([]),
+            $mailId
+        );
+
+        $recipientData = $mail->getRecipientData(1);
+
+        $this->assertSame(['name' => 'Alice Johnson', 'email' => 'alice.johnson@example.com'], $recipientData);
+    }
 }

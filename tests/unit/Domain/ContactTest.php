@@ -43,6 +43,15 @@ class ContactTest extends TestCase
         (new Contact("", "sender@name.com"))->getName();
     }
 
+    public function testGetAddressThrowsExceptionForInvalidAddress(): void
+    {
+        $name = 'Jane Smith';
+        $invalidAddress = 'invalid-email-address';
+        $contact = new Contact($name, $invalidAddress);
+        $this->expectException(MalformedAddressException::class);
+        $contact->getAddress();
+    }
+
     /**
      * @return array<string>
      */

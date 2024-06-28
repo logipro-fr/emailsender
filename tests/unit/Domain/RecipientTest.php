@@ -25,11 +25,30 @@ class RecipientTest extends TestCase
         (new Recipient([]))->getRecipientAddress(0);
     }
 
-    public function testRecipientWithAnUnexistingRank(): void
+
+    public function testGetRecipientAddressException(): void
     {
-        $this->expectExceptionMessage("This recipient rank doesn't exist");
+
+        $contacts = [
+            new Contact('John Doe', 'john.doe@example.com'),
+            new Contact('Jane Smith', 'jane.smith@example.com'),
+        ];
+        $recipient = new Recipient($contacts);
+
         $this->expectException(OutOfBoundsException::class);
-        (new Recipient([new Contact("Morgan Chemarin", "morgan.chemarin@logipro.fr")]))->getRecipientName(-5);
-        (new Recipient([new Contact("Morgan Chemarin", "morgan.chemarin@logipro.fr")]))->getRecipientAddress(-6);
+        $recipient->getRecipientAddress(2);
+    }
+
+    public function testGetRecipientNameException(): void
+    {
+
+        $contacts = [
+            new Contact('John Doe', 'john.doe@example.com'),
+            new Contact('Jane Smith', 'jane.smith@example.com'),
+        ];
+        $recipient = new Recipient($contacts);
+
+        $this->expectException(OutOfBoundsException::class);
+        $recipient->getRecipientName(2);
     }
 }

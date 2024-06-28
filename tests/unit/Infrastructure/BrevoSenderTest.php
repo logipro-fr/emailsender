@@ -3,7 +3,7 @@
 namespace EmailSender\Tests\Infrastructure\Brevo;
 
 use EmailSender\Application\Service\SendMail\Exceptions\ErrorMailSenderException;
-use EmailSender\Application\Service\SendMail\RequestEmailSender;
+use EmailSender\Application\Service\SendMail\SendMailRequest;
 use EmailSender\Domain\Mail;
 use EmailSender\Domain\Model\Mail\MailId;
 use PHPUnit\Framework\TestCase;
@@ -18,11 +18,11 @@ class BrevoSenderTest extends TestCase
     private const API_KEY = 'api_key';
     private const ERROR_500_MESSAGE = "Erreur lors de l'envoi du mail";
 
-    private RequestEmailSender $request;
+    private SendMailRequest $request;
 
     protected function setUp(): void
     {
-        $this->request = new RequestEmailSender(
+        $this->request = new SendMailRequest(
             "Pedro, pedro@gmail.com",
             ["Pedro, pedro@gmail.com", "Mathis, Mathis@gmail.com"],
             "Email test",

@@ -2,12 +2,14 @@
 
 namespace EmailSender\Infrastructure\Api\V1;
 
-use EmailSender\Application\Service\SendMail\EmailApiInterface;
-use EmailSender\Application\Service\SendMail\EmailSender;
-use EmailSender\Application\Service\SendMail\MailFactory;
-use EmailSender\Application\Service\SendMail\RequestEmailSender;
+use EmailSender\Application\Service\SendMail\SendMailRequest;
+use EmailSender\Application\Service\SendMail\SendMail;
 use EmailSender\Domain\EmailSenderRepositoryInterface;
+use EmailSender\Infrastructure\Persistance\EmailSenderRepositoryInMemory;
+use EmailSender\Infrastructure\Provider\Brevo\BrevoSender;
 use Exception;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,50 +17,54 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SendMailController
 {
-    public function __construct(private EmailSender $emailSender)
+    public function __construct(private EmailSenderRepositoryInMemory $repository, private Client $client)
     {
     }
 
-    #[Route('/api/v1/sendMail', 'sendMail', methods: ['GET'])]
+    #[Route('/api/v1/sendmail', 'sendmail', methods: ['POST'])]
     public function execute(Request $request): Response
     {
-        $requestData = json_decode($request->getContent(), true);
-
-        // Validation des données reçues
-        if (!is_array($requestData) || !isset($requestData['sender'], $requestData['to'], $requestData['subject'], $requestData['htmlContent'])) {
-            return new Response('Invalid request data', 400);
-        }
-
-        if (!isset($requestData['sender']['name'], $requestData['sender']['email'])) {
-            return new Response('Invalid sender data', 400);
-        }
-
-        foreach ($requestData['to'] as $recipient) {
-            if (!isset($recipient['name'], $recipient['email'])) {
-                return new Response('Invalid recipient data', 400);
-            }
-        }
-
-        $requestEmailSender = new RequestEmailSender(
-            $requestData['sender']['name'] . ', ' . $requestData['sender']['email'],
-            array_map(fn($recipient) => $recipient['name'] . ', ' . $recipient['email'], $requestData['to']),
-            $requestData['subject'],
-            $requestData['htmlContent']
-        );
-
         try {
-            $this->emailSender->execute($requestEmailSender);
-            $idMailResponse = $this->emailSender->getResponse();
-
-            if (json_encode($idMailResponse) === false) {
-                throw new Exception('Failed to encode response data to JSON');
-            }
-
-            $response = new Response(json_encode($idMailResponse), 200);
+            $request1 = $this->buildSendMailRequest($request);
+            $mail = new SendMail($this->repository, new BrevoSender('', $this->client));
+            $mail->execute($request1);
         } catch (Exception $e) {
-            $response = new Response('Error sending email: ' . $e->getMessage(), 500);
+            return new JsonResponse(
+                [
+                    'success' => false,
+                    'ErrorCode' => $e::class,
+                    'data' => '',
+                    'message' => $e->getMessage(),
+                ],
+                400,
+            );
         }
+        $response = $mail->getResponse();
+        return new JsonResponse(
+            [
+                'success' => true,
+                'ErrorCode' => "",
+                'data' => ['MailId' =>  $response->mailId],
+                'message' => "",
+            ],
+            201
+        );
+    }
 
-        return $response;
+    private function buildSendMailRequest(Request $request): SendMailRequest
+    {
+        $content = $request->getContent();
+        /** @var array<array<float>|string> */
+        $data = json_decode($content, true);
+        /** @var string */
+        $sender = $data['sender'];
+        /** @var array<string> */
+        $recipient = $data['recipient'];
+        /** @var string */
+        $subject = $data['subject'];
+        /** @var string*/
+        $content = $data['content'];
+
+        return new SendMailRequest($sender, $recipient, $subject, $content);
     }
 }

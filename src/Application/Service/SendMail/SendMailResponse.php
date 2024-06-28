@@ -2,7 +2,7 @@
 
 namespace EmailSender\Application\Service\SendMail;
 
-class ResponseSendMail
+class SendMailResponse
 {
     public function __construct(
         public readonly string $mailId,

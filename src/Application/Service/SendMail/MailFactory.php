@@ -15,7 +15,7 @@ use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 
 class MailFactory
 {
-    public function buildMailFromRequest(RequestEmailSender $request, MailId $mailId = new MailId()): Mail
+    public function buildMailFromRequest(SendMailRequest $request, MailId $mailId = new MailId()): Mail
     {
         return new Mail(
             new Subject($request->subject),
