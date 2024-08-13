@@ -3,6 +3,7 @@
 namespace EmailSender\Domain\Model\Mail;
 
 use EmailSender\Application\Service\SendMail\Exceptions\MalformedAddressException;
+use EmailSender\Domain\Model\Mail\Exceptions\InvalidSenderArgumentsException;
 use InvalidArgumentException;
 
 class Contact
@@ -13,11 +14,11 @@ class Contact
     public function __construct(string $name, string $address)
     {
         if (empty($name)) {
-            throw new InvalidArgumentException("Contact name cannot be empty");
+            throw new InvalidSenderArgumentsException("The sender mail or the sender email is not valid", 422);
         }
 
         if (empty($address)) {
-            throw new InvalidArgumentException("Contact address cannot be empty");
+            throw new InvalidSenderArgumentsException("The sender mail or the sender email is not valid", 422);
         }
 
         $this->name = $name;
