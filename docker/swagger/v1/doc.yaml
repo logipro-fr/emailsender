@@ -1,0 +1,117 @@
+openapi: 3.1.0
+info:
+  title: Email Service API
+  version: 1.0.0
+servers:
+  - url: /api/v1
+    description: API routes
+  - url: http://172.17.0.1:11680/api/v1
+    description: Local Development API routes
+paths:
+  /email/send:
+    post:
+      summary: Send an email
+      operationId: sendEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sender:
+                  type: string
+                  description: The name and email address of the sender
+                  example: Pedro, pedro@gmail.com
+                recipient:
+                  type: array
+                  items:
+                    type: string
+                  description: List of recipients with their names and email addresses
+                  example:
+                    - "Pedro, pedro@gmail.com"
+                subject:
+                  type: string
+                  description: Subject of the email
+                  example: Email test
+                content:
+                  type: string
+                  description: HTML content of the email
+                  example: "<html><body><h1>This is a test email</h1></body></html>"
+                provider:
+                  type: string
+                  description: The email provider to use for sending the email
+                  example: "Brevo"
+      responses:
+        '201':
+          description: Email sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Indicates if the email was sent successfully
+                    example: true
+                  message:
+                    type: string
+                    description: Additional information or success message
+                    example: "Email sent successfully"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Indicates if the request was successful
+                    example: false
+                  errorCode:
+                    type: string
+                    description: Error code describing the issue
+                    example: InvalidRequestException
+                  message:
+                    type: string
+                    description: Error message explaining the failure
+                    example: "Invalid email format"
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Indicates if the request was successful
+                    example: false
+                  errorCode:
+                    type: string
+                    description: Error code describing the issue
+                    example: UnprocessableEntityException
+                  message:
+                    type: string
+                    description: Error message explaining the failure
+                    example: "Unprocessable entity"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Indicates if the request was successful
+                    example: false
+                  errorCode:
+                    type: string
+                    description: Error code describing the issue
+                    example: InternalServerErrorException
+                  message:
+                    type: string
+                    description: Error message explaining the failure
+                    example: "Internal server error"

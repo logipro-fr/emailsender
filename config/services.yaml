@@ -11,26 +11,26 @@ services:
     autowire: true # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+  email.repository:
+    public: true
+    autowire: true
+    class: EmailSender\Infrastructure\Persistence\Mail\EmailSenderRepositoryDoctrine
+
+  email.providerFactory:
+    public: true
+    autowire: true
+    class: EmailSender\Infrastructure\Provider\FactoryEmailProvider
+
   EmailSender\Infrastructure\Api\V1\SendMailController:
     autowire: true
     arguments:
-      $repository: '@mail.repository'
-      $client: '@mail.client'
+      $repository: '@email.repository'
+      $emailProviderFactory: '@email.providerFactory'
 
-  mail.repository:
-    public: true
-    autowire: true
-    class: EmailSender\Infrastructure\Persistance\EmailSenderRepositoryInMemory
 
-  mail.client:
-    public: true
-    autowire: true
-    class: GuzzleHttp\Client
 
-  EmailSender\Domain\EmailSenderRepositoryInMemory: "@mail.repository"
-  GuzzleHttp\Client: "@mail.client"
-  
-
+  EmailSender\Domain\Model\Mail\EmailSenderRepositoryInterface: "@email.repository"
+  EmailSender\Application\Service\SendMail\AbstractFactoryEmailProvider: "@email.providerFactory"
   EmailSender\Infrastructure\Api\V1\:
     resource: "../src/Infrastructure/Api/V1/"
     tags: ["controller.service_arguments"]

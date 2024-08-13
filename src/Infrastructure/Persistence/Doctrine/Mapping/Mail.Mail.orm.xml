@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="https://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="https://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+
+
+    <entity name="EmailSender\Domain\Model\Mail\Mail" table="mails"
+            repository-class="EmailSender\Infrastructure\Persistence\Mail\MailRepositoryDoctrine">
+        <id name="mailId" type="mail_id" column="mail_id">
+            <generator strategy="NONE"/>
+        </id>
+        <field name="createdAt" type="datetime_immutable" column="created_at"/>
+        <field name="subject" type="subject" column="subject"/>
+        <field name="sender" type="string" column="sender"/>
+        <field name="recipient" type="string" column="recipient"/>
+        <field name="htmlContent" type="string" column="htmlContent"/>
+        <field name="attachment" type="string" column="attachment"/>
+    </entity>
+</doctrine-mapping>
