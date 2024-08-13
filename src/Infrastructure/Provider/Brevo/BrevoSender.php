@@ -3,51 +3,42 @@
 namespace EmailSender\Infrastructure\Provider\Brevo;
 
 use EmailSender\Application\Service\SendMail\EmailApiInterface;
-use EmailSender\Application\Service\SendMail\Exceptions\ErrorMailSenderException;
-use Brevo\Client\Api\TransactionalEmailsApi;
-use Brevo\Client\Configuration;
-use Brevo\Client\Model\CreateSmtpEmail;
-use Brevo\Client\Model\SendSmtpEmail;
-use EmailSender\Application\Service\SendMail\SendMail;
-use EmailSender\Application\Service\SendMail\MailFactory;
 use EmailSender\Application\Service\SendMail\SendMailRequest;
-use EmailSender\Domain\Model\Mail\MailId;
-use EmailSender\Infrastructure\Persistance\EmailSenderRepositoryInMemory;
-use GuzzleHttp\Client;
-use Exception;
-use GuzzleHttp\ClientInterface;
+use EmailSender\Domain\Model\Mail\Mail;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
+use function Safe\json_encode;
 
 class BrevoSender implements EmailApiInterface
 {
-    private const API_KEY = 'api-key';
-    private const HTTP_ERROR_500 = 500;
-    private const ERROR_SENDING = "Erreur lors de l'envoi du mail";
-
-    private TransactionalEmailsApi $emailApi;
-
-    public function __construct(string $apiKey, ClientInterface $client = new Client())
+    public function __construct(private HttpClientInterface $client)
     {
-        $config = Configuration::getDefaultConfiguration()->setApiKey(self::API_KEY, $apiKey);
-        $this->emailApi = new TransactionalEmailsApi($client, $config);
     }
 
-    public function sendMail(SendMailRequest $request): bool
+    public function sendMail(Mail $emailToSend): bool
     {
-        try {
-            $mail = (new MailFactory())->buildMailFromRequest($request);
-
-            $sendSmtpEmail = new SendSmtpEmail([
-                'subject' => $mail->getSubject(),
-                'sender' => $mail->getSenderData(),
-                'to' => $mail->getRecipientData(0),
-                'htmlContent' => $mail->getHtmlContent(),
-                'attachment' => $mail->getAttachment(),
-            ]);
-
-            $this->emailApi->sendTransacEmail($sendSmtpEmail);
+        $url = 'https://api.brevo.com/v3/smtp/email';
+        $data = json_encode([
+            "sender" => $emailToSend->getSenderData(),
+            "to" => [$emailToSend->getRecipientData(0)],
+            "subject" => $emailToSend->getSubject(),
+            "htmlContent" => $emailToSend->getHtmlContent()
+        ]);
+        $options = [
+            'headers' => [
+                'accept' => 'application/json',
+                'api-key' => $_ENV['BREVO_API_KEY'],
+                'content-type' => 'application/json',
+            ],
+            'body' => $data,
+        ];
+        $response = $this->client->request('POST', $url, $options);
+        if ($response->getStatusCode() ===  200 || $response->getStatusCode() ===  201) {
             return true;
-        } catch (Exception $e) {
-            throw new ErrorMailSenderException(self::ERROR_SENDING, self::HTTP_ERROR_500, $e);
+        } elseif ($response->getStatusCode() >= 400) {
+            throw new BadRequestException();
         }
+        return false;
     }
 }
