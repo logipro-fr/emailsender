@@ -2,14 +2,13 @@
 
 namespace EmailSender\Infrastructure\Api\V1;
 
+use Doctrine\ORM\EntityManagerInterface;
+use EmailSender\Application\Service\SendMail\AbstractFactoryEmailProvider;
 use EmailSender\Application\Service\SendMail\SendMailRequest;
 use EmailSender\Application\Service\SendMail\SendMail;
-use EmailSender\Domain\EmailSenderRepositoryInterface;
-use EmailSender\Infrastructure\Persistance\EmailSenderRepositoryInMemory;
-use EmailSender\Infrastructure\Provider\Brevo\BrevoSender;
+use EmailSender\Domain\Model\Mail\EmailSenderRepositoryInterface;
 use Exception;
-use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
+use Infection\Configuration\Schema\InvalidFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,34 +16,39 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SendMailController
 {
-    public function __construct(private EmailSenderRepositoryInMemory $repository, private Client $client)
-    {
+    public function __construct(
+        private EmailSenderRepositoryInterface $repository,
+        private AbstractFactoryEmailProvider $emailProviderFactory,
+        private EntityManagerInterface $entityManager
+    ) {
     }
 
-    #[Route('/api/v1/sendmail', 'sendmail', methods: ['POST'])]
+    #[Route('/api/v1/email/send', 'sendmail', methods: ['POST'])]
     public function execute(Request $request): Response
     {
         try {
-            $request1 = $this->buildSendMailRequest($request);
-            $mail = new SendMail($this->repository, new BrevoSender('', $this->client));
-            $mail->execute($request1);
+            $request = $this->buildSendMailRequest($request);
+            $service = new SendMail($this->repository, $this->emailProviderFactory);
+            $service->execute($request);
         } catch (Exception $e) {
             return new JsonResponse(
                 [
                     'success' => false,
                     'ErrorCode' => $e::class,
-                    'data' => '',
+                    'data' => "",
                     'message' => $e->getMessage(),
                 ],
                 400,
             );
         }
-        $response = $mail->getResponse();
+        $response = $service->getResponse();
+        $this->entityManager->flush();
+
         return new JsonResponse(
             [
                 'success' => true,
                 'ErrorCode' => "",
-                'data' => ['MailId' =>  $response->mailId],
+                'data' => ['mailId' =>  $response->mailId],
                 'message' => "",
             ],
             201
@@ -54,8 +58,10 @@ class SendMailController
     private function buildSendMailRequest(Request $request): SendMailRequest
     {
         $content = $request->getContent();
+
         /** @var array<array<float>|string> */
         $data = json_decode($content, true);
+
         /** @var string */
         $sender = $data['sender'];
         /** @var array<string> */
@@ -64,7 +70,9 @@ class SendMailController
         $subject = $data['subject'];
         /** @var string*/
         $content = $data['content'];
+        /** @var string */
+        $provider = $data['provider'];
 
-        return new SendMailRequest($sender, $recipient, $subject, $content);
+        return new SendMailRequest($sender, $recipient, $subject, $content, $provider);
     }
 }
