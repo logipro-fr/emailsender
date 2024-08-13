@@ -2,7 +2,9 @@
 
 namespace EmailSender\Application\Service\SendMail;
 
+use EmailSender\Domain\Model\Mail\Mail;
+
 interface EmailApiInterface
 {
-    public function sendMail(SendMailRequest $request): bool;
+    public function sendMail(Mail $emailToSend): bool;
 }
