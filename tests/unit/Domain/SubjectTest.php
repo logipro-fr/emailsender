@@ -2,7 +2,7 @@
 
 namespace EmailSender\Tests\Domain;
 
-use EmailSender\Domain\Subject;
+use EmailSender\Domain\Model\Mail\Subject;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 

@@ -4,8 +4,8 @@ namespace EmailSender\Tests\Domain;
 
 use ArgumentCountError;
 use EmailSender\Application\Service\SendMail\Exceptions\MalformedAddressException;
-use EmailSender\Domain\Contact;
-use EmailSender\Domain\Sender;
+use EmailSender\Domain\Model\Mail\Contact;
+use EmailSender\Domain\Model\Mail\Sender;
 use PHPUnit\Framework\TestCase;
 
 class SenderTest extends TestCase

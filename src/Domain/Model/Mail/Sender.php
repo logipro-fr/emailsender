@@ -1,6 +1,6 @@
 <?php
 
-namespace EmailSender\Domain;
+namespace EmailSender\Domain\Model\Mail;
 
 use ArgumentCountError;
 
@@ -27,5 +27,11 @@ class Sender
     public function getSenderAddress(): string
     {
         return $this->sender->getAddress();
+    }
+
+    public function __toString()
+    {
+
+        return $this->sender->getName() .  " " . $this->sender->getAddress();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace EmailSender\Domain;
+namespace EmailSender\Domain\Model\Mail;
 
 class Attachment
 {
@@ -17,5 +17,10 @@ class Attachment
     public function getAttachment(): array
     {
         return $this->attachment;
+    }
+
+    public function __toString()
+    {
+        return 'Attachments:';
     }
 }

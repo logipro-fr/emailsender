@@ -1,6 +1,6 @@
 <?php
 
-namespace EmailSender\Domain;
+namespace EmailSender\Domain\Model\Mail;
 
 class HtmlContent
 {
@@ -9,6 +9,11 @@ class HtmlContent
     }
 
     public function getHtmlContent(): string
+    {
+        return $this->htmlContent;
+    }
+
+    public function __toString()
     {
         return $this->htmlContent;
     }

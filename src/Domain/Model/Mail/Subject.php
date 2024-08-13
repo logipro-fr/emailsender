@@ -1,6 +1,6 @@
 <?php
 
-namespace EmailSender\Domain;
+namespace EmailSender\Domain\Model\Mail;
 
 use InvalidArgumentException;
 
@@ -15,6 +15,11 @@ class Subject
         if (empty($this->subject)) {
             throw new InvalidArgumentException("Subject cannot be empty");
         }
+        return $this->subject;
+    }
+
+    public function __toString()
+    {
         return $this->subject;
     }
 }

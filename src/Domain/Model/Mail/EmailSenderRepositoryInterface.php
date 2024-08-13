@@ -1,6 +1,6 @@
 <?php
 
-namespace EmailSender\Domain;
+namespace EmailSender\Domain\Model\Mail;
 
 use EmailSender\Domain\Model\Mail\MailId;
 

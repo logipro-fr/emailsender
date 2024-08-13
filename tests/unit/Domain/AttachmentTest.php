@@ -2,7 +2,7 @@
 
 namespace EmailSender\Tests\Domain;
 
-use EmailSender\Domain\Attachment;
+use EmailSender\Domain\Model\Mail\Attachment;
 use PHPUnit\Framework\TestCase;
 
 class AttachmentTest extends TestCase

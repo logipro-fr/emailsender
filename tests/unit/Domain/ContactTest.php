@@ -3,7 +3,7 @@
 namespace EmailSender\Tests\Domain;
 
 use EmailSender\Application\Service\SendMail\Exceptions\MalformedAddressException;
-use EmailSender\Domain\Contact;
+use EmailSender\Domain\Model\Mail\Contact;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -73,7 +73,7 @@ class ContactTest extends TestCase
             // with excessive length
             'user1234567890123456789012345678901234567890123456789012345678901234567890@example.com',
             // with excessive domain length :
-            'user@example1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890.com'
+            'user@example12345678901234567890123456789012345678901234567890123456789012345678901234567890.com'
         ];
     }
 }

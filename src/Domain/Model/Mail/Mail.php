@@ -1,8 +1,9 @@
 <?php
 
-namespace EmailSender\Domain;
+namespace EmailSender\Domain\Model\Mail;
 
 use EmailSender\Domain\Model\Mail\MailId;
+use DateTimeImmutable;
 
 class Mail
 {
@@ -13,6 +14,7 @@ class Mail
         private HtmlContent $htmlContent,
         private Attachment $attachment,
         private MailId $mailId = new MailId(),
+        private DateTimeImmutable $createdAt = new DateTimeImmutable()
     ) {
     }
 
@@ -54,7 +56,7 @@ class Mail
      */
     public function getRecipientData(int $rank): array
     {
-        return ['name' => $this->getRecipientName($rank), 'email' => $this->getRecipientAddress($rank)];
+        return ['email' => $this->getRecipientAddress($rank), 'name' => $this->getRecipientName($rank) ];
     }
 
     public function getHtmlContent(): string
@@ -73,5 +75,10 @@ class Mail
     public function getMailId(): MailId
     {
         return $this->mailId;
+    }
+
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
     }
 }

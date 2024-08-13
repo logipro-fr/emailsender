@@ -2,7 +2,7 @@
 
 namespace EmailSender\Tests\Domain;
 
-use EmailSender\Domain\HtmlContent;
+use EmailSender\Domain\Model\Mail\HtmlContent;
 use PHPUnit\Framework\TestCase;
 
 class HtmlContentTest extends TestCase

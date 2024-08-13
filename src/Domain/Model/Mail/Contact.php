@@ -1,6 +1,6 @@
 <?php
 
-namespace EmailSender\Domain;
+namespace EmailSender\Domain\Model\Mail;
 
 use EmailSender\Application\Service\SendMail\Exceptions\MalformedAddressException;
 use InvalidArgumentException;
