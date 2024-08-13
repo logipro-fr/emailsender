@@ -16,6 +16,22 @@ function build_docker_images() {
 }
 
 
+echo "-------------Step 1: Create some directories-----------------------------------------------------"
 create_var_directory
+echo "-------------Step 1: Done!"
+
+echo "-------------Step 2: Build docker images---------------------------------------------------------"
 build_docker_images
-bin/composer install
+echo "-------------Step 2: Done!"
+
+echo "-------------Step 3: Assure that no docker container is running anymore--------------------------"
+./stop
+echo "-------------Step 3: Done!"
+
+echo "-------------Step 4: Composer tool will install php components in vendor directory---------------"
+./bin/composer install
+echo "-------------Step 4: Done!"
+
+echo "-------------Step 5: Create database if no database exists---------------------------------------"
+create_database_in_container "docker/mariadb/db.env" "emailsender-mariadb" "emailsender-php"
+echo "-------------Step 5: Done!"
