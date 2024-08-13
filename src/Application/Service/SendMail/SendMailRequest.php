@@ -2,7 +2,7 @@
 
 namespace EmailSender\Application\Service\SendMail;
 
-use EmailSender\Domain\Mail;
+use EmailSender\Domain\Model\Mail\Mail;
 
 class SendMailRequest
 {
@@ -12,6 +12,7 @@ class SendMailRequest
         public readonly array $recipient,
         public readonly string $subject,
         public readonly string $content,
+        public readonly string $provider
     ) {
     }
 }

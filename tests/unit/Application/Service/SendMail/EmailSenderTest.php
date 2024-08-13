@@ -3,22 +3,14 @@
 namespace EmailSender\Tests;
 
 use PHPUnit\Framework\TestCase;
-use EmailSender\Application\Service\SendMail\EmailApiInterface;
-use EmailSender\Application\Service\SendMail\SendMail;
-use EmailSender\Application\Service\SendMail\Exceptions\ErrorAuthException;
 use EmailSender\Application\Service\SendMail\MailFactory;
+use EmailSender\Application\Service\SendMail\SendMail;
 use EmailSender\Application\Service\SendMail\SendMailRequest;
-use EmailSender\Application\Service\SendMail\SendMailResponse;
-use EmailSender\Domain\Attachment;
-use EmailSender\Domain\Contact;
-use EmailSender\Domain\HtmlContent;
-use EmailSender\Domain\Mail;
+use EmailSender\Domain\Model\Mail\Mail;
 use EmailSender\Domain\Model\Mail\MailId;
-use EmailSender\Domain\Recipient;
-use EmailSender\Domain\Sender;
-use EmailSender\Domain\Subject;
-use EmailSender\Infrastructure\Persistance\EmailSenderRepositoryInMemory;
-use InvalidArgumentException;
+use EmailSender\Infrastructure\Persistence\Mail\EmailSenderRepositoryInMemory;
+use EmailSender\Infrastructure\Provider\FactoryEmailProvider;
+use Symfony\Component\HttpClient\MockHttpClient;
 
 class EmailSenderTest extends TestCase
 {
@@ -31,25 +23,26 @@ class EmailSenderTest extends TestCase
             ["Pedro, pedro@gmail.com", "Mathis, Mathis@gmail.com"],
             "Email test",
             "<html><body><h1>This is a test email</h1></body></html>",
+            "testProvider"
         );
     }
 
-    public function testSendTransactionalEmailSuccess(): void
+    public function testSendMail(): void
     {
-        $apiMock = $this->createMock(EmailApiInterface::class);
-        $mailId = new MailId("test");
-        $apiMock->method('sendMail')->willReturn(true);
         $repository = new EmailSenderRepositoryInMemory();
-        $service = new SendMail($repository, $apiMock, "test");
-
+        $service = new SendMail($repository, new FactoryEmailProvider(new MockHttpClient()));
         $service->execute($this->request);
         $response = $service->getResponse();
+        $this->assertStringStartsWith("mai_", $response->mailId);
+    }
 
-        $this->assertInstanceOf(SendMailResponse::class, $response);
-        $this->assertEquals('test', $response->mailId);
-
-
-        $this->assertNotEmpty($repository->findById($mailId));
+    public function testSendMailWithCustomId(): void
+    {
+        $repository = new EmailSenderRepositoryInMemory();
+        $service = new SendMail($repository, new FactoryEmailProvider(new MockHttpClient()), "IdTest");
+        $service->execute($this->request);
+        $response = $service->getResponse();
+        $this->assertEquals(($repository->findById(new MailId("IdTest")))->getMailId(), $response->mailId);
     }
 
     public function testMailFactory(): void
@@ -70,16 +63,5 @@ class EmailSenderTest extends TestCase
         $factory = new MailFactory();
         $mail = $factory->buildMailFromRequest($this->request, new MailId('test'));
         $this->assertEquals(new MailId('test'), $mail->getMailId());
-    }
-
-    public function mailDataForTests(): Mail
-    {
-        return new Mail(
-            new Subject('Test Email Infra'),
-            new Sender(new Contact("Sender Name", "sender@example.com")),
-            new Recipient([new Contact("Mathis Tallaron", "mathis.tallaron@logipro.com")]),
-            new HtmlContent('<html><body><h1>This is a test email</h1></body></html>'),
-            new Attachment([])
-        );
     }
 }

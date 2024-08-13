@@ -2,14 +2,14 @@
 
 namespace EmailSender\Application\Service\SendMail;
 
-use EmailSender\Domain\Attachment;
-use EmailSender\Domain\Contact;
-use EmailSender\Domain\HtmlContent;
-use EmailSender\Domain\Mail;
+use EmailSender\Domain\Model\Mail\Attachment;
+use EmailSender\Domain\Model\Mail\Contact;
+use EmailSender\Domain\Model\Mail\HtmlContent;
+use EmailSender\Domain\Model\Mail\Mail;
 use EmailSender\Domain\Model\Mail\MailId;
-use EmailSender\Domain\Recipient;
-use EmailSender\Domain\Sender;
-use EmailSender\Domain\Subject;
+use EmailSender\Domain\Model\Mail\Recipient;
+use EmailSender\Domain\Model\Mail\Sender;
+use EmailSender\Domain\Model\Mail\Subject;
 use InvalidArgumentException;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 

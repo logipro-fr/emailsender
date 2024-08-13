@@ -2,8 +2,10 @@
 
 namespace EmailSender\Application\Service\SendMail;
 
-use EmailSender\Domain\EmailSenderRepositoryInterface;
+use EmailSender\Domain\Model\Mail\EmailSenderRepositoryInterface;
 use EmailSender\Domain\Model\Mail\MailId;
+use Infection\Configuration\Schema\InvalidFile;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class SendMail
 {
@@ -12,7 +14,7 @@ class SendMail
 
     public function __construct(
         private EmailSenderRepositoryInterface $respository,
-        private EmailApiInterface $emailApi,
+        private AbstractFactoryEmailProvider $emailProviderFactory,
         private string $mailId = ""
     ) {
     }
@@ -23,11 +25,20 @@ class SendMail
         if ($request == null) {
             throw new \InvalidArgumentException(self::REQUEST_NULL_MESSAGE);
         }
-        $mail = (new MailFactory())->buildMailFromRequest($request, new MailId($this->mailId));
-        $this->emailApi->sendMail($request);
 
-        $this->respository->add($mail);
-        $this->response = new SendMailResponse($mail->getMailId());
+        $mail = (new MailFactory())->buildMailFromRequest($request, new MailId($this->mailId));
+
+
+        $providerResponse = $this->emailProviderFactory
+        ->buildProvider($request->provider)
+        ->sendMail($mail);
+
+        if ($providerResponse) {
+            $this->respository->add($mail);
+            $this->response = new SendMailResponse($mail->getMailId());
+        } else {
+            $this->response = new SendMailResponse("");
+        }
     }
 
     public function getResponse(): SendMailResponse
