@@ -21,8 +21,7 @@ class RecipientTest extends TestCase
     {
         $this->expectExceptionMessage("Recipients cannot be empty");
         $this->expectException(InvalidArgumentException::class);
-        (new Recipient([]))->getRecipientName(0);
-        (new Recipient([]))->getRecipientAddress(0);
+        (new Recipient([]));
     }
 
 
