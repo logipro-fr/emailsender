@@ -15,7 +15,9 @@
   <php>
     <env name="APP_ENV" value="test" force="true"/>
     <env name="KERNEL_CLASS" value="EmailSender\Infrastructure\Shared\Symfony\Kernel"/>
+    <env name="DATABASE_URL" value="sqlite:///var/sqlite-unit-test.db"/>
     <env name="APP_DEBUG" value="0"/>
+    <env name="BREVO_API_KEY" value="KeyForTestingPurpose"/>
   </php>
   <source>
     <include>
