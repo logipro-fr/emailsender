@@ -16,7 +16,8 @@ class SenderTest extends TestCase
         $this->assertEquals("morgan.chemarin@test.com", $sender->getSenderAddress());
     }
 
-    public function testGetSenderData(): void {
+    public function testGetSenderData(): void
+    {
 
         $sender = new Sender(new Contact("Morgan Chemarin", "morgan.chemarin@test.com"));
         $expectedOutput = ['name' => "Morgan Chemarin", "email" => "morgan.chemarin@test.com"];

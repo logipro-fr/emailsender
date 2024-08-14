@@ -26,7 +26,8 @@ class FactoryEmailProviderTest extends TestCase
         $sut = (new ProviderFactoryEmailProvider($mockHttp))->buildProvider($providerApi);
         $this->assertInstanceOf(ProviderFake::class, $sut);
     }
-    public function testAbastractFactoryException(): void {
+    public function testAbastractFactoryException(): void
+    {
         $this->expectException(InvalidProviderException::class);
         $this->expectExceptionCode(422);
         $this->expectExceptionMessage("Error : Invalid Provider provided");

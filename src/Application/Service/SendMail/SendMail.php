@@ -4,13 +4,10 @@ namespace EmailSender\Application\Service\SendMail;
 
 use EmailSender\Domain\Model\Mail\EmailSenderRepositoryInterface;
 use EmailSender\Domain\Model\Mail\MailId;
-use Infection\Configuration\Schema\InvalidFile;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class SendMail
 {
     private SendMailResponse $response;
-    private const REQUEST_NULL_MESSAGE = "Request cannot be null";
 
     public function __construct(
         private EmailSenderRepositoryInterface $respository,

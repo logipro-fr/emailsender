@@ -3,8 +3,6 @@
 namespace EmailSender\Domain\Model\Mail;
 
 use InvalidArgumentException;
-use OutOfBoundsException;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class Recipient
 {
@@ -21,7 +19,8 @@ class Recipient
     /**
      * @return array<int, Contact>
      */
-    public function getRecipients(): array {
+    public function getRecipients(): array
+    {
         return $this->recipient;
     }
 
@@ -29,7 +28,9 @@ class Recipient
     {
         $result = "";
         for ($i = 0; $i < count($this->recipient); $i++) {
-            $result .= " ". $i+1 . ". ".$this->recipient[$i]->getName() . " " . $this->recipient[$i]->getAddress();
+            $result .= " " . ($i + 1) . ". " .
+             $this->recipient[$i]->getName() .
+            " " . $this->recipient[$i]->getAddress();
         }
         return $result;
     }

@@ -19,10 +19,10 @@ class BrevoSender implements EmailApiInterface
     public function sendMail(Mail $emailToSend): bool
     {
         $url = 'https://api.brevo.com/v3/smtp/email';
-        
+
         $response = $this->client->request(
-            'POST', 
-            $url, 
+            'POST',
+            $url,
             $this->buildSendMailRequest($emailToSend)
         );
         if ($response->getStatusCode() ===  200 || $response->getStatusCode() ===  201) {
@@ -33,12 +33,14 @@ class BrevoSender implements EmailApiInterface
         return false;
     }
 
-    private function buildSendMailRequest(Mail $emailToSend): array {
+    /**
+     * @return array<string, mixed>
+     */
+    private function buildSendMailRequest(Mail $emailToSend): array
+    {
         $data = json_encode([
             "sender" => $emailToSend->getSender()->getSenderData(),
-            "to" => [
-                $this->buildRecipientData($emailToSend->getRecipient())
-            ],
+            "to" => $this->buildRecipientData($emailToSend->getRecipient()),
             "subject" => $emailToSend->getSubject()->getSubject(),
             "htmlContent" => $emailToSend->getHtmlContent()->getHtmlContent(),
         ]);
@@ -52,12 +54,15 @@ class BrevoSender implements EmailApiInterface
         ];
         return $options;
     }
+
     /**
-     * @return array<string, string>
+     * @param Recipient $recipient
+     * @return array<int, array<string, string>>
      */
-    private function buildRecipientData(Recipient $recipient): array {
+    private function buildRecipientData(Recipient $recipient): array
+    {
         $result = [];
-        foreach( $recipient->getRecipients() as $recipient) {
+        foreach ($recipient->getRecipients() as $recipient) {
             $result[] = $recipient->getContactData();
         }
         return $result;

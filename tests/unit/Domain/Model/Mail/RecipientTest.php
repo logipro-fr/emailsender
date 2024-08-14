@@ -10,7 +10,8 @@ use PHPUnit\Framework\TestCase;
 
 class RecipientTest extends TestCase
 {
-    public function testGetRecipients(): void {
+    public function testGetRecipients(): void
+    {
         $contacts = [
             new Contact('John Doe', 'john.doe@example.com'),
             new Contact('Jane Smith', 'jane.smith@example.com'),
@@ -21,7 +22,7 @@ class RecipientTest extends TestCase
         $this->assertEquals('John Doe', $recipient->getRecipients()[0]->getName());
         $this->assertEquals('john.doe@example.com', $recipient->getRecipients()[0]->getAddress());
     }
-    
+
     public function testRecipientCannotBeEmpty(): void
     {
         $this->expectExceptionMessage("Recipients cannot be empty");
@@ -41,6 +42,4 @@ class RecipientTest extends TestCase
         $expectedOutput = ' 1. John Doe john.doe@example.com 2. Jane Smith jane.smith@example.com';
         $this->assertEquals($output, $expectedOutput);
     }
-
-
 }

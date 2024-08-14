@@ -79,7 +79,8 @@ class SendMailControllerTest extends WebTestCase
         $this->assertEquals($mailId, $mail->getMailId());
     }
 
-    public function testControllerException(): void {
+    public function testControllerException(): void
+    {
         $this->client->request(
             "POST",
             "/api/v1/email/send",
@@ -103,7 +104,6 @@ class SendMailControllerTest extends WebTestCase
         $this->assertStringContainsString('"ErrorCode":"InvalidArgumentException"', $responseContent);
         $this->assertStringContainsString('"data":""', $responseContent);
         $this->assertStringContainsString('"message":"Subject cannot be empty"', $responseContent);
-
     }
 
     public function testSendMailControllerExecute(): void

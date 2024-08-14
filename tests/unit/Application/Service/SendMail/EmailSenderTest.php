@@ -54,7 +54,7 @@ class EmailSenderTest extends TestCase
         $this->assertEquals('Pedro', $mail->getSender()->getSenderName());
         $this->assertEquals('pedro@gmail.com', $mail->getSender()->getSenderAddress());
         $this->assertEquals('Mathis', $mail->getRecipient()->getRecipients()[1]->getName());
-        $this->assertEquals('Mathis@gmail.com',$mail->getRecipient()->getRecipients()[1]->getAddress());
+        $this->assertEquals('Mathis@gmail.com', $mail->getRecipient()->getRecipients()[1]->getAddress());
         $this->assertEquals('Pedro', $mail->getRecipient()->getRecipients()[0]->getName());
         $this->assertEquals('pedro@gmail.com', $mail->getRecipient()->getRecipients()[0]->getAddress());
     }

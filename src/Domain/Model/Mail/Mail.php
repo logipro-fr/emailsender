@@ -28,7 +28,8 @@ class Mail
         return $this->sender;
     }
 
-    public function getRecipient(): Recipient {
+    public function getRecipient(): Recipient
+    {
         return $this->recipient;
     }
 

@@ -76,9 +76,10 @@ class ContactTest extends TestCase
         ];
     }
 
-    public function getContactData(): void {
+    public function getContactData(): void
+    {
         $contact = new Contact("test", "test@gmail.com");
         $contactData = $contact->getContactData();
-        $this->assertEquals(['email' => 'test', 'name'=> "test@gmail.com"], $contactData);
+        $this->assertEquals(['email' => 'test', 'name' => "test@gmail.com"], $contactData);
     }
 }
