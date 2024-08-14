@@ -32,7 +32,7 @@ class SendMailControllerTest extends WebTestCase
     public function setUp(): void
     {
         $this->initDoctrineTester();
-        $this->clearTables(["posts"]);
+        $this->clearTables(["mails"]);
 
         $this->client = static::createClient(["debug" => false]);
 
