@@ -79,6 +79,33 @@ class SendMailControllerTest extends WebTestCase
         $this->assertEquals($mailId, $mail->getMailId());
     }
 
+    public function testControllerException(): void {
+        $this->client->request(
+            "POST",
+            "/api/v1/email/send",
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+                "sender" => "",
+                "recipient" => [],
+                "subject" => "",
+                "content" => "",
+                "provider" => 'testProvider'
+            ])
+        );
+        /** @var string */
+        $responseContent = $this->client->getResponse()->getContent();
+        $responseCode = $this->client->getResponse()->getStatusCode();
+
+        $this->assertStringContainsString('"success":false', $responseContent);
+        $this->assertEquals(400, $responseCode);
+        $this->assertStringContainsString('"ErrorCode":"InvalidArgumentException"', $responseContent);
+        $this->assertStringContainsString('"data":""', $responseContent);
+        $this->assertStringContainsString('"message":"Subject cannot be empty"', $responseContent);
+
+    }
+
     public function testSendMailControllerExecute(): void
     {
 
