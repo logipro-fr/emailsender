@@ -15,14 +15,14 @@ use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 
 class MailFactory
 {
-    public function buildMailFromRequest(SendMailRequest $request, MailId $mailId = new MailId()): Mail
+    public function buildMailFromRequest(SendMailRequest $request, MailId $mailId = new MailId(), string $separator = ", "): Mail
     {
         return new Mail(
             new Subject($request->subject),
             new Sender(
-                $this->buildContact($request->sender, ", ")
+                $this->buildContact($request->sender, $separator)
             ),
-            $this->buildRecipient($request->recipient, ", "),
+            $this->buildRecipient($request->recipient, $separator),
             new HtmlContent($request->content),
             new Attachment(),
             $mailId
@@ -60,7 +60,7 @@ class MailFactory
     private function verifySeparator(string $separator): string
     {
         if (empty($separator)) {
-            throw new InvalidArgumentException("Separator cannot be empty");
+            throw new InvalidArgumentException("Error : Invalid seperator provided in the mail factory", 500);
         } else {
             return $separator;
         }

@@ -21,24 +21,13 @@ class SendMail
 
     public function execute(SendMailRequest $request): void
     {
-
-        if ($request == null) {
-            throw new \InvalidArgumentException(self::REQUEST_NULL_MESSAGE);
-        }
-
         $mail = (new MailFactory())->buildMailFromRequest($request, new MailId($this->mailId));
-
 
         $providerResponse = $this->emailProviderFactory
         ->buildProvider($request->provider)
         ->sendMail($mail);
-
-        if ($providerResponse) {
-            $this->respository->add($mail);
-            $this->response = new SendMailResponse($mail->getMailId());
-        } else {
-            $this->response = new SendMailResponse("");
-        }
+        $this->respository->add($mail);
+        $this->response = new SendMailResponse($mail->getMailId());
     }
 
     public function getResponse(): SendMailResponse
