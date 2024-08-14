@@ -39,7 +39,6 @@ class Sender
 
     public function __toString()
     {
-
         return $this->sender->getName() .  " " . $this->sender->getAddress();
     }
 }

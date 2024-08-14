@@ -12,10 +12,9 @@
             <generator strategy="NONE"/>
         </id>
         <field name="createdAt" type="datetime_immutable" column="created_at"/>
-        <field name="subject" type="subject" column="subject"/>
-        <field name="sender" type="string" column="sender"/>
-        <field name="recipient" type="string" column="recipient"/>
-        <field name="htmlContent" type="string" column="htmlContent"/>
-        <field name="attachment" type="string" column="attachment"/>
+        <field name="subject" type="subject" column="subjects"/>
+        <field name="sender" type="sender" column="senders"/>
+        <field name="recipient" type="recipient" column="recipients"/>
+        <field name="htmlContent" type="htmlContent" column="htmlContents"/>
     </entity>
 </doctrine-mapping>

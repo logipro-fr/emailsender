@@ -28,9 +28,7 @@ class Recipient
     {
         $result = "";
         for ($i = 0; $i < count($this->recipient); $i++) {
-            $result .= " " . ($i + 1) . ". " .
-             $this->recipient[$i]->getName() .
-            " " . $this->recipient[$i]->getAddress();
+            $result .= $this->recipient[$i]->getName() .", " . $this->recipient[$i]->getAddress();
         }
         return $result;
     }

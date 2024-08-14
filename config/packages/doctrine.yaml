@@ -4,6 +4,9 @@ doctrine:
     types:
       mail_id: EmailSender\Infrastructure\Persistence\Doctrine\Types\MailIdType
       subject: EmailSender\Infrastructure\Persistence\Doctrine\Types\SubjectType
+      htmlContent: EmailSender\Infrastructure\Persistence\Doctrine\Types\HtmlContentType
+      sender: EmailSender\Infrastructure\Persistence\Doctrine\Types\SenderType
+      recipient: EmailSender\Infrastructure\Persistence\Doctrine\Types\RecipientType
 
   orm:
     auto_generate_proxy_classes: true
