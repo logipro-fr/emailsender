@@ -5,6 +5,7 @@ namespace EmailSender\Infrastructure\Provider;
 use EmailSender\Application\Service\SendMail\AbstractFactoryEmailProvider;
 use EmailSender\Application\Service\SendMail\EmailApiInterface;
 use EmailSender\Infrastructure\Provider\Brevo\BrevoSender;
+use EmailSender\Infrastructure\Provider\Exceptions\InvalidProviderException;
 use EmailSender\Tests\Infrastructure\Provider\ProviderFake;
 use InvalidArgumentException;
 use Symfony\Component\HttpClient\CurlHttpClient;
@@ -25,7 +26,10 @@ class FactoryEmailProvider extends AbstractFactoryEmailProvider
                 $provider = new ProviderFake();
                 break;
             default:
-                throw new InvalidArgumentException("The provider is not good");
+                throw new InvalidProviderException(
+                    "Error : Invalid Provider provided",
+                    InvalidProviderException::ERROR_CODE
+                );
         }
 
         return $provider;
