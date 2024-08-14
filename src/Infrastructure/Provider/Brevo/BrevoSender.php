@@ -3,8 +3,8 @@
 namespace EmailSender\Infrastructure\Provider\Brevo;
 
 use EmailSender\Application\Service\SendMail\EmailApiInterface;
-use EmailSender\Application\Service\SendMail\SendMailRequest;
 use EmailSender\Domain\Model\Mail\Mail;
+use EmailSender\Domain\Model\Mail\Recipient;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -19,11 +19,28 @@ class BrevoSender implements EmailApiInterface
     public function sendMail(Mail $emailToSend): bool
     {
         $url = 'https://api.brevo.com/v3/smtp/email';
+        
+        $response = $this->client->request(
+            'POST', 
+            $url, 
+            $this->buildSendMailRequest($emailToSend)
+        );
+        if ($response->getStatusCode() ===  200 || $response->getStatusCode() ===  201) {
+            return true;
+        } elseif ($response->getStatusCode() >= 400) {
+            throw new BadRequestException();
+        }
+        return false;
+    }
+
+    private function buildSendMailRequest(Mail $emailToSend): array {
         $data = json_encode([
-            "sender" => $emailToSend->getSenderData(),
-            "to" => [$emailToSend->getRecipientData(0)],
-            "subject" => $emailToSend->getSubject(),
-            "htmlContent" => $emailToSend->getHtmlContent()
+            "sender" => $emailToSend->getSender()->getSenderData(),
+            "to" => [
+                $this->buildRecipientData($emailToSend->getRecipient())
+            ],
+            "subject" => $emailToSend->getSubject()->getSubject(),
+            "htmlContent" => $emailToSend->getHtmlContent()->getHtmlContent(),
         ]);
         $options = [
             'headers' => [
@@ -33,12 +50,16 @@ class BrevoSender implements EmailApiInterface
             ],
             'body' => $data,
         ];
-        $response = $this->client->request('POST', $url, $options);
-        if ($response->getStatusCode() ===  200 || $response->getStatusCode() ===  201) {
-            return true;
-        } elseif ($response->getStatusCode() >= 400) {
-            throw new BadRequestException();
+        return $options;
+    }
+    /**
+     * @return array<string, string>
+     */
+    private function buildRecipientData(Recipient $recipient): array {
+        $result = [];
+        foreach( $recipient->getRecipients() as $recipient) {
+            $result[] = $recipient->getContactData();
         }
-        return false;
+        return $result;
     }
 }

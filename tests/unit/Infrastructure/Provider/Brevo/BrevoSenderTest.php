@@ -57,4 +57,18 @@ class BrevoSenderTest extends TestCase
         $provider = new BrevoSender($mockHttpClient);
         $provider->sendMail($this->request);
     }
+
+    public function testSendEmailFalse(): void
+    {
+        $mockResponse = new MockResponse(
+            file_get_contents(CurrentWorkDirPath::getPath() .
+            '/tests/ressources/brevoResponse.json'),
+            ['http_code' => 300],
+        );
+        $mockHttpClient = new MockHttpClient($mockResponse, "https://api.brevo.com/v3/smtp/email");
+        $provider = new BrevoSender($mockHttpClient);
+        $response = $provider->sendMail($this->request);
+
+        $this->assertFalse($response);
+    }
 }
