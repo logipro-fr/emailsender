@@ -35,6 +35,12 @@ class Recipient
 
         return $this->recipient[$rank]->getAddress();
     }
+    /**
+     * @return array<int, Contact>
+     */
+    public function getRecipients(): array {
+        return $this->recipient;
+    }
 
     public function __toString()
     {

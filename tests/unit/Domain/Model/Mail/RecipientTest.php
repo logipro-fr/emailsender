@@ -50,4 +50,16 @@ class RecipientTest extends TestCase
         $this->expectException(OutOfBoundsException::class);
         $recipient->getRecipientName(2);
     }
+
+    public function testGetRecipients(): void {
+        $contacts = [
+            new Contact('John Doe', 'john.doe@example.com'),
+            new Contact('Jane Smith', 'jane.smith@example.com'),
+        ];
+        $recipient = new Recipient($contacts);
+        $this->assertEquals('Jane Smith', $recipient->getRecipients()[1]->getName());
+        $this->assertEquals('jane.smith@example.com', $recipient->getRecipients()[1]->getAddress());
+        $this->assertEquals('John Doe', $recipient->getRecipients()[0]->getName());
+        $this->assertEquals('john.doe@example.com', $recipient->getRecipients()[0]->getAddress());
+    }
 }
