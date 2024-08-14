@@ -29,6 +29,14 @@ class Sender
         return $this->sender->getAddress();
     }
 
+    /**
+    * @return array<string, string>
+    */
+    public function getSenderData(): array
+    {
+        return ['name' => $this->getSenderName(), 'email' => $this->getSenderAddress()];
+    }
+
     public function __toString()
     {
 

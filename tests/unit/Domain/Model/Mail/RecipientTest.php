@@ -10,47 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class RecipientTest extends TestCase
 {
-    public function testRecipient(): void
-    {
-        $contact = new Recipient([new Contact("Morgan Chemarin", "morgan.chemarin@logipro.fr")]);
-        $this->assertEquals("Morgan Chemarin", $contact->getRecipientName(0));
-        $this->assertEquals("morgan.chemarin@logipro.fr", $contact->getRecipientAddress(0));
-    }
-
-    public function testRecipientCannotBeEmpty(): void
-    {
-        $this->expectExceptionMessage("Recipients cannot be empty");
-        $this->expectException(InvalidArgumentException::class);
-        (new Recipient([]));
-    }
-
-
-    public function testGetRecipientAddressException(): void
-    {
-
-        $contacts = [
-            new Contact('John Doe', 'john.doe@example.com'),
-            new Contact('Jane Smith', 'jane.smith@example.com'),
-        ];
-        $recipient = new Recipient($contacts);
-
-        $this->expectException(OutOfBoundsException::class);
-        $recipient->getRecipientAddress(2);
-    }
-
-    public function testGetRecipientNameException(): void
-    {
-
-        $contacts = [
-            new Contact('John Doe', 'john.doe@example.com'),
-            new Contact('Jane Smith', 'jane.smith@example.com'),
-        ];
-        $recipient = new Recipient($contacts);
-
-        $this->expectException(OutOfBoundsException::class);
-        $recipient->getRecipientName(2);
-    }
-
     public function testGetRecipients(): void {
         $contacts = [
             new Contact('John Doe', 'john.doe@example.com'),
@@ -62,4 +21,26 @@ class RecipientTest extends TestCase
         $this->assertEquals('John Doe', $recipient->getRecipients()[0]->getName());
         $this->assertEquals('john.doe@example.com', $recipient->getRecipients()[0]->getAddress());
     }
+    
+    public function testRecipientCannotBeEmpty(): void
+    {
+        $this->expectExceptionMessage("Recipients cannot be empty");
+        $this->expectException(InvalidArgumentException::class);
+        (new Recipient([]));
+    }
+
+    public function testToString(): void
+    {
+
+        $contacts = [
+            new Contact('John Doe', 'john.doe@example.com'),
+            new Contact('Jane Smith', 'jane.smith@example.com'),
+        ];
+        $recipient = new Recipient($contacts);
+        $output = $recipient->__toString();
+        $expectedOutput = ' 1. John Doe john.doe@example.com 2. Jane Smith jane.smith@example.com';
+        $this->assertEquals($output, $expectedOutput);
+    }
+
+
 }

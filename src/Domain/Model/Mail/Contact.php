@@ -42,4 +42,12 @@ class Contact
         }
         return $this->address;
     }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getContactData(): array
+    {
+        return ['email' => $this->getAddress(), 'name' => $this->getName() ];
+    }
 }

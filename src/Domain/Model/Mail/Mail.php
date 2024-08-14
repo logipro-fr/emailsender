@@ -18,58 +18,28 @@ class Mail
     ) {
     }
 
-    public function getSubject(): string
+    public function getSubject(): Subject
     {
-        return $this->subject->getSubject();
+        return $this->subject;
     }
 
-    public function getSenderName(): string
+    public function getSender(): Sender
     {
-        return $this->sender->getSenderName();
+        return $this->sender;
     }
 
-    public function getSenderAddress(): string
-    {
-        return $this->sender->getSenderAddress();
+    public function getRecipient(): Recipient {
+        return $this->recipient;
     }
 
-    /**
-     * @return array<string, string>
-     */
-    public function getSenderData(): array
+    public function getHtmlContent(): HtmlContent
     {
-        return ['name' => $this->getSenderName(), 'email' => $this->getSenderAddress()];
+        return $this->htmlContent;
     }
 
-    public function getRecipientName(int $rank): string
+    public function getAttachment(): Attachment
     {
-        return $this->recipient->getRecipientName($rank);
-    }
-
-    public function getRecipientAddress(int $rank): string
-    {
-        return $this->recipient->getRecipientAddress($rank);
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    public function getRecipientData(int $rank): array
-    {
-        return ['email' => $this->getRecipientAddress($rank), 'name' => $this->getRecipientName($rank) ];
-    }
-
-    public function getHtmlContent(): string
-    {
-        return $this->htmlContent->getHtmlContent();
-    }
-
-    /**
-     * @return array<string, Attachment> $attachment
-     */
-    public function getAttachment(): array
-    {
-        return $this->attachment->getAttachment();
+        return $this->attachment;
     }
 
     public function getMailId(): MailId

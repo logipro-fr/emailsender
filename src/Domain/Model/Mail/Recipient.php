@@ -18,23 +18,6 @@ class Recipient
         }
     }
 
-    public function getRecipientName(int $rank): string
-    {
-        if (!isset($this->recipient[$rank])) {
-            throw new OutOfBoundsException("This recipient rank doesn't exist");
-        }
-
-        return $this->recipient[$rank]->getName();
-    }
-
-    public function getRecipientAddress(int $rank): string
-    {
-        if (!isset($this->recipient[$rank])) {
-            throw new OutOfBoundsException("This recipient rank doesn't exist");
-        }
-
-        return $this->recipient[$rank]->getAddress();
-    }
     /**
      * @return array<int, Contact>
      */
@@ -46,7 +29,7 @@ class Recipient
     {
         $result = "";
         for ($i = 0; $i < count($this->recipient); $i++) {
-            $result .= $this->getRecipientName($i) . " " . $this->getRecipientAddress($i);
+            $result .= " ". $i+1 . ". ".$this->recipient[$i]->getName() . " " . $this->recipient[$i]->getAddress();
         }
         return $result;
     }

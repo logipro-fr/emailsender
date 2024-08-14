@@ -30,12 +30,17 @@ class ContactTest extends TestCase
         }
     }
 
-    public function testContactIsEmpty(): void
+    public function testContactNameIsEmpty(): void
     {
         $this->expectException(InvalidSenderArgumentsException::class);
-        new Contact("", "");
+        new Contact("", "a@gmail.Com");
     }
 
+    public function testContactAddressIsEmpty(): void
+    {
+        $this->expectException(InvalidSenderArgumentsException::class);
+        new Contact("test", "");
+    }
 
     public function testGetAddressThrowsExceptionForInvalidAddress(): void
     {
@@ -69,5 +74,11 @@ class ContactTest extends TestCase
             // with excessive domain length :
             'user@example12345678901234567890123456789012345678901234567890123456789012345678901234567890.com'
         ];
+    }
+
+    public function getContactData(): void {
+        $contact = new Contact("test", "test@gmail.com");
+        $contactData = $contact->getContactData();
+        $this->assertEquals(['email' => 'test', 'name'=> "test@gmail.com"], $contactData);
     }
 }
