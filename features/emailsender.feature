@@ -6,7 +6,7 @@ Feature: Send an email
     Scenario: Sending a simple email
         Given I want send a mail via an email provider
         When I send an email with the following details:
-        | recipient          | subject   | body                 |
-        | example@domain.com | Send Test | This is a send test  |
+        | recipient                   | subject                    | body                                  | 
+        | example, example@domain.com | Email Sender Scenario test | This is a scenario email sending test | 
         Then the email is successfully sent
         And the email is marked as sent with its sent date

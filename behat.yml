@@ -11,12 +11,3 @@ default:
         - '%paths.base%/features/'
       contexts:
         - Features\EmailContext
-#  extensions:
-#    DVDoug\Behat\CodeCoverage\Extension:
-#      filter:
-#        include:
-#          directories:
-#            'src': ~
-#      reports:
-#        text:
-#          showColors: true
